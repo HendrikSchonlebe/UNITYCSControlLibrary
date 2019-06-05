@@ -467,10 +467,25 @@ namespace UNITYCSControlLibrary
             Boolean isSuccessful = true;
 
             errorMessage = string.Empty;
+            thisPhrase.Clear();
 
             try
             {
-
+                String strSQL = "SELECT * FROM tblPhrases WHERE phrase_id = " + phraseId.ToString();
+                SqlCommand cmdGet = new SqlCommand(strSQL, myConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    thisPhrase.Load(rdrGet);
+                    isSuccessful = Gather_Phrase();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    errorMessage = "** Operator **\r\n\r\nGet Phrase:\r\n\r\nPhrase not found !";
+                }
+                rdrGet.Close();
+                cmdGet.Dispose();
             }
             catch (Exception ex)
             {
@@ -488,7 +503,8 @@ namespace UNITYCSControlLibrary
 
             try
             {
-
+                PhraseId = Convert.ToInt32(thisPhrase.Rows[0]["phrase_id"]);
+                PhraseDescription = thisPhrase.Rows[0]["phrase_description"].ToString();
             }
             catch (Exception ex)
             {
@@ -501,12 +517,29 @@ namespace UNITYCSControlLibrary
         public Boolean Update_Phrase(SqlTransaction trnEnvelope)
         {
             Boolean isSuccessful = true;
+            Boolean hasChanged = false;
 
             errorMessage = string.Empty;
 
             try
             {
+                String strSQL = "UPDATE tblPhrases SET ";
+                if (PhraseDescription != thisPhrase.Rows[0]["phrase_description"].ToString())
+                {
+                    strSQL = strSQL + "phrase_description = '" + myFormatting.Hyphon(PhraseDescription) + "' ";
+                    hasChanged = true;
+                }
 
+                if (hasChanged == true)
+                {
+                    strSQL = strSQL + "WHERE phrase_id = " + PhraseId.ToString();
+                    SqlCommand cmdUpdate = new SqlCommand(strSQL, myConnection, trnEnvelope);
+                    if (cmdUpdate.ExecuteNonQuery() != 1)
+                    {
+                        isSuccessful = false;
+                        errorMessage = "** Operator **\r\n\r\nUpdate Phrase:\r\n\r\nMore than one record would be updated !";
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -524,7 +557,13 @@ namespace UNITYCSControlLibrary
 
             try
             {
-
+                String strSQL = "DELETE FROM tblPhrases WHERE phrase_id = " + phraseId.ToString();
+                SqlCommand cmdDelete = new SqlCommand(strSQL, myConnection, trnEnvelope);
+                if (cmdDelete.ExecuteNonQuery() != 1)
+                {
+                    isSuccessful = false;
+                    errorMessage = "** Operator **\r\n\r\nDelete Phrase:\r\n\r\nMore than one record would be deleted !";
+                }
             }
             catch (Exception ex)
             {
@@ -543,7 +582,15 @@ namespace UNITYCSControlLibrary
 
             try
             {
-
+                String strSQL = "SELECT * FROM tblPhrases ORDER BY phrase_description";
+                SqlCommand cmdGet = new SqlCommand(strSQL, myConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    PhrasesList.Load(rdrGet);
+                }
+                rdrGet.Close();
+                cmdGet.Dispose();
             }
             catch (Exception ex)
             {
