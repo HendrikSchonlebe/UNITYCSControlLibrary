@@ -601,6 +601,212 @@ namespace UNITYCSControlLibrary
             return isSuccessful;
         }
         #endregion
+        #region Sales Table
+        public DataTable SalesList { get; set; } = new DataTable();
+        public Int32 SaleId { get; set; }
+        public String SaleDescription { get; set; }
+        public DateTime SaleDate { get; set; }
+        public Boolean SaleIsActive { get; set; }
+        public String SaleDataSource { get; set; }
+
+        private DataTable thisSale { get; set; } = new DataTable();
+
+        public Boolean Insert_Sale(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            errorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "INSERT INTO tblSales (";
+                strSQL = strSQL + "sales_description, ";
+                strSQL = strSQL + "sales_date, ";
+                strSQL = strSQL + "sales_active, ";
+                strSQL = strSQL + "sales_datasource) VALUES (";
+                strSQL = strSQL + "'" + myFormatting.Hyphon(SaleDescription) + "', ";
+                strSQL = strSQL + "CONVERT(datetime, '" + SaleDate.ToString() + "', 103) ";
+                strSQL = strSQL + "'" + SaleIsActive.ToString() + "', ";
+                strSQL = strSQL + "'" + myFormatting.Hyphon(SaleDataSource) + "')";
+                SqlCommand cmdInsert = new SqlCommand(strSQL, myConnection, trnEnvelope);
+                if (cmdInsert.ExecuteNonQuery() != 1)
+                {
+                    isSuccessful = false;
+                    errorMessage = "** Operator **\r\n\r\nInsert New Sale:\r\n\r\nMore than one record would be inserted !";
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                errorMessage = "** Operator **\r\n\r\nInsert New Sale:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_Sale(Int32 saleId)
+        {
+            Boolean isSuccessful = true;
+
+            errorMessage = string.Empty;
+            thisSale.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblSales WHERE sales_id = " + saleId.ToString();
+                SqlCommand cmdGet = new SqlCommand(strSQL, myConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    thisSale.Load(rdrGet);
+                    isSuccessful = Gather_Sale();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    errorMessage = "** Operator **\r\n\r\nGet Sale:\r\n\r\nSale Id not found !";
+                }
+                rdrGet.Close();
+                cmdGet.Dispose();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                errorMessage = "** Operator **\r\n\r\nGet Sale:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        private Boolean Gather_Sale()
+        {
+            Boolean isSuccessful = true;
+
+            errorMessage = string.Empty;
+
+            try
+            {
+                SaleId = Convert.ToInt32(thisSale.Rows[0]["sales_id"]);
+                SaleDescription = thisSale.Rows[0]["sales_description"].ToString();
+                SaleDate = Convert.ToDateTime(thisSale.Rows[0]["sales_date"]);
+                SaleIsActive = Convert.ToBoolean(thisSale.Rows[0]["sales_active"]);
+                SaleDataSource = thisSale.Rows[0]["sales_datasource"].ToString();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                errorMessage = "** Operator **\r\n\r\nGather Sale:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Update_Sale(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+            Boolean hasChanged = false;
+
+            errorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "UPDATE tblSales SET ";
+                if (SaleDescription != thisSale.Rows[0]["sales_description"].ToString())
+                {
+                    strSQL = strSQL + "sales_description = '" + myFormatting.Hyphon(SaleDescription) + "', ";
+                    hasChanged = true;
+                }
+                if (SaleDate != Convert.ToDateTime(thisSale.Rows[0]["sales_date"]))
+                {
+                    strSQL = strSQL + "sales_date =  CONVERT(datetime, '" + SaleDate.ToString() + "', 103), ";
+                    hasChanged = true;
+                }
+                if (SaleIsActive != Convert.ToBoolean(thisSale.Rows[0]["sales_active"]))
+                {
+                    strSQL = strSQL + "sales_active = '" + SaleIsActive.ToString() + "', ";
+                    hasChanged = true;
+                }
+                if (SaleDataSource != thisSale.Rows[0]["sales_datasource"].ToString())
+                {
+                    strSQL = strSQL + "sales_datasource = '" + myFormatting.Hyphon(SaleDataSource) + "', ";
+                }
+
+                if (hasChanged == true)
+                {
+                    strSQL = strSQL.Substring(0, strSQL.Length - 2) + " WHERE sales_id = " + SaleId.ToString();
+                    SqlCommand cmdUpdate = new SqlCommand(strSQL, myConnection, trnEnvelope);
+                    if (cmdUpdate.ExecuteNonQuery() != 1)
+                    {
+                        isSuccessful = false;
+                        errorMessage = "** Operator **\r\n\r\nUpdate Sale:\r\n\r\nMore than one record would be updated !";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                errorMessage = "** Operator **\r\n\r\nUpdate Sale:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Delete_Sale(Int32 saleId, SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            errorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "DELETE FROM tblSales WHERE sales_id = " + saleId.ToString();
+                SqlCommand cmdDelete = new SqlCommand(strSQL, myConnection, trnEnvelope);
+                if (cmdDelete.ExecuteNonQuery() != 1)
+                {
+                    isSuccessful = false;
+                    errorMessage = "** Operator **\r\n\r\nDelete Sale:\r\n\r\nMore than one record would be deleted !";
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                errorMessage = "** Operator **\r\n\r\nDelete Sale:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_List_Of_Sales(String activeFilter)
+        {
+            Boolean isSuccessful = true;
+
+            errorMessage = string.Empty;
+            SalesList.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblSales ";
+                if (activeFilter == "Active")
+                    strSQL = strSQL + "WHERE sales_active = '" + true.ToString() + "' ";
+                else if (activeFilter == "Inactive")
+                    strSQL = strSQL + "WHERE sales_active = '" + false.ToString() + "' ";
+                strSQL = strSQL + "ORDER BY sales_date DESC";
+                SqlCommand cmdGet = new SqlCommand(strSQL, myConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    SalesList.Load(rdrGet);
+                }
+                else
+                {
+                    isSuccessful = false;
+                    errorMessage = "** Operator **\r\n\r\nInsert New Sale:\r\n\r\nNo records found !";
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                errorMessage = "** Operator **\r\n\r\nInsert New Sale:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        #endregion
     }
     public class UNITYCSSaleLibrary
     {
