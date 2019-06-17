@@ -807,6 +807,178 @@ namespace UNITYCSControlLibrary
             return isSuccessful;
         }
         #endregion
+        #region Agent Details
+        public String AgentName1 { get; set; }
+        public String AgentName2 { get; set; }
+        public String AgentStreetAddress { get; set; }
+        public String AgentCityAddress { get; set; }
+        public String AgentState { get; set; }
+        public String AgentPostCode { get; set; }
+        public String AgentMailingStreet { get; set; }
+        public String AgentMailingCity { get; set; }
+        public String AgentMailingState { get; set; }
+        public String AgentMailingPostCode { get; set; }
+        public String AgentTelephone { get; set; }
+        public String AgentFax { get; set; }
+        public String AgentEmail { get; set; }
+        public String AgentABN { get; set; }
+        public Boolean AgentGSTStatus { get; set; }
+        public String AgentACN { get; set; }
+        public String AgentBankName { get; set; }
+        public String AgentBranchName { get; set; }
+        public String AgentBSB { get; set; }
+        public String AgentAccountNumber { get; set; }
+        public Double AgentComissionRate1 { get; set; }
+        public Double AgentComissionRate2 { get; set; }
+        public Double AgentComissionRate3 { get; set; }
+        public Double AgentComissionRate4 { get; set; }
+        public Double AgentComissionRate5 { get; set; }
+        public Boolean AgentChargePremium { get; set; }
+        public Double AgentPremiumRate1 { get; set; }
+        public Double AgentPremiumRate2 { get; set; }
+        public Double AgentPremiumRate3 { get; set; }
+        public Double AgentPremiumRate4 { get; set; }
+        public Double AgentPremiumRate5 { get; set; }
+        public String AgentReportsPath { get; set; }
+        public String AgentInvoiceDocument { get; set; }
+        public String AgentAccountSaleDocument { get; set; }
+        public Boolean AgentUnityAccess { get; set; }
+        public String AgentUnityDBName { get; set; }
+        public String AgentUnitysaName { get; set; }
+        public String AgentUnitysapwd { get; set; }
+
+        private DataTable thisAgent = new DataTable();
+
+        public Boolean Get_Agent_Details()
+        {
+            Boolean isSuccessful = true;
+
+            errorMessage = string.Empty;
+            thisAgent.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblAgent";
+                SqlCommand cmdGet = new SqlCommand(strSQL, myConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    thisAgent.Load(rdrGet);
+                    isSuccessful = Gather_Agent_Details();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    errorMessage = "** Operator **\r\n\r\nGet Agent's Details:\r\n\r\nAgent's Details not found !";
+                }
+                rdrGet.Close();
+                cmdGet.Dispose();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                errorMessage = "** Operator **\r\n\r\nGet Agent's Details:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        private Boolean Gather_Agent_Details()
+        {
+            Boolean isSuccessful = true;
+
+            errorMessage = string.Empty;
+
+            try
+            {
+                AgentName1 = thisAgent.Rows[0]["agent_name1"].ToString();
+                AgentName2 = thisAgent.Rows[0]["agent_name2"].ToString();
+                AgentStreetAddress = thisAgent.Rows[0]["agent_street"].ToString();
+                AgentCityAddress = thisAgent.Rows[0]["agent_city"].ToString();
+                AgentState = thisAgent.Rows[0]["agent_state"].ToString();
+                AgentPostCode = thisAgent.Rows[0]["agent_postcode"].ToString();
+                AgentMailingStreet = thisAgent.Rows[0]["agent_mailingstreet"].ToString();
+                AgentMailingCity = thisAgent.Rows[0]["agent_mailingcity"].ToString();
+                AgentMailingState = thisAgent.Rows[0]["agent_mailingstate"].ToString();
+                AgentMailingPostCode = thisAgent.Rows[0]["agent_mailingpostcode"].ToString();
+                AgentTelephone = thisAgent.Rows[0]["agent_telephone"].ToString();
+                AgentFax = thisAgent.Rows[0]["agent_fax"].ToString();
+                AgentEmail = thisAgent.Rows[0]["agent_email"].ToString();
+                AgentABN = thisAgent.Rows[0]["agent_abn"].ToString();
+                AgentGSTStatus = Convert.ToBoolean(thisAgent.Rows[0]["agent_gstreg"]);
+                AgentACN = thisAgent.Rows[0]["agent_acn"].ToString();
+                AgentBankName = thisAgent.Rows[0]["agent_bankname"].ToString();
+                AgentBranchName = thisAgent.Rows[0]["agent_branch"].ToString();
+                AgentBSB = thisAgent.Rows[0]["agent_bsb"].ToString();
+                AgentAccountNumber = thisAgent.Rows[0]["agent_accountno"].ToString();
+                AgentReportsPath = thisAgent.Rows[0]["agent_reportpath"].ToString();
+                AgentInvoiceDocument = thisAgent.Rows[0]["agent_invoice"].ToString();
+                AgentAccountSaleDocument = thisAgent.Rows[0]["agent_accountsale"].ToString();
+                AgentUnityAccess = Convert.ToBoolean(thisAgent.Rows[0]["agent_unityaccess"]);
+                AgentUnityDBName = thisAgent.Rows[0]["agent_unitydbname"].ToString();
+                AgentUnitysaName = thisAgent.Rows[0]["agent_unitysaname"].ToString();
+                AgentUnitysapwd = thisAgent.Rows[0]["agent_unitysapwd"].ToString();
+                AgentComissionRate1 = Convert.ToDouble(thisAgent.Rows[0]["agent_commission1"]);
+                AgentComissionRate2 = Convert.ToDouble(thisAgent.Rows[0]["agent_commission2"]);
+                AgentComissionRate3 = Convert.ToDouble(thisAgent.Rows[0]["agent_commission3"]);
+                AgentComissionRate4 = Convert.ToDouble(thisAgent.Rows[0]["agent_commission4"]);
+                AgentComissionRate5 = Convert.ToDouble(thisAgent.Rows[0]["agent_commission5"]);
+                AgentChargePremium = Convert.ToBoolean(thisAgent.Rows[0]["agent_chargepremium"]);
+                AgentPremiumRate1 = Convert.ToDouble(thisAgent.Rows[0]["agent_premium1"]);
+                AgentPremiumRate2 = Convert.ToDouble(thisAgent.Rows[0]["agent_premium2"]);
+                AgentPremiumRate3 = Convert.ToDouble(thisAgent.Rows[0]["agent_premium3"]);
+                AgentPremiumRate4 = Convert.ToDouble(thisAgent.Rows[0]["agent_premium4"]);
+                AgentPremiumRate5 = Convert.ToDouble(thisAgent.Rows[0]["agent_premium5"]);
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                errorMessage = "** Operator **\r\n\r\nGather Agent's Details:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Update_Agent_Details(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+            Boolean hasChanged = false;
+
+            errorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "UPDATE tblAgent SET ";
+                if (AgentName1 != thisAgent.Rows[0]["agent_name1"].ToString())
+                {
+                    strSQL = strSQL + "agent_name1 = '" + myFormatting.Hyphon(AgentName1) + "', ";
+                    hasChanged = true;
+                }
+                if (AgentName2 != thisAgent.Rows[0]["agent_name2"].ToString())
+                {
+                    strSQL = strSQL + "agent_name2 = '" + myFormatting.Hyphon(AgentName2) + "', ";
+                    hasChanged = true;
+                }
+                if (AgentStreetAddress != thisAgent.Rows[0]["agent_street"].ToString())
+                {
+                    strSQL = strSQL + "agent_street = '" + myFormatting.Hyphon(AgentStreetAddress) + "', ";
+                    hasChanged = true;
+                }
+
+                if (hasChanged == true)
+                {
+                    strSQL = strSQL.Substring(0, strSQL.Length - 2);
+                    SqlCommand cmdUpdate = new SqlCommand(strSQL, myConnection, trnEnvelope);
+                    cmdUpdate.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                errorMessage = "** Operator **\r\n\r\nUpdate Agent's Details:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        #endregion
     }
     public class UNITYCSSaleLibrary
     {
