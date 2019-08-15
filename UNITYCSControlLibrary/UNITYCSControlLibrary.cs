@@ -62,6 +62,25 @@ namespace UNITYCSControlLibrary
 
         public String ErrorMessage { get; set; } = string.Empty;
 
+        public Boolean IsBSB(String strInput)
+        {
+            Boolean logValid = true;
+
+            ErrorMessage = string.Empty;
+
+            System.Text.RegularExpressions.Regex rgx = new System.Text.RegularExpressions.Regex(@"[0-9][0-9][0-9]\-[0-9][0-9][0-9]");
+
+            try
+            {
+                logValid = rgx.Match(strInput).Success;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "** Operator **\r\n\r\nData Validation - IsBSB " + ex.Message + " !";
+            }
+
+            return logValid;
+        }
         public Boolean IsEmailAddress(String strInput)
         {
             Boolean logValid = true;
@@ -1045,6 +1064,7 @@ namespace UNITYCSControlLibrary
             try
             {
                 String strSQL = "UPDATE tblAgent SET ";
+
                 if (AgentName1 != thisAgent.Rows[0]["agent_name1"].ToString())
                 {
                     strSQL = strSQL + "agent_name1 = '" + MyFormatting.Hyphon(AgentName1) + "', ";
@@ -1095,6 +1115,146 @@ namespace UNITYCSControlLibrary
                     strSQL = strSQL + "agent_mailingpostcode = '" + MyFormatting.Hyphon(AgentMailingPostCode) + "', ";
                     hasChanged = true;
                 }
+                if (AgentTelephone != thisAgent.Rows[0]["agent_telephone"].ToString())
+                {
+                    strSQL = strSQL + "agent_telephone = '" + MyFormatting.Hyphon(AgentTelephone) + "', ";
+                    hasChanged = true;
+                }
+                if (AgentFax != thisAgent.Rows[0]["agent_fax"].ToString())
+                {
+                    strSQL = strSQL + "agent_fax = '" + MyFormatting.Hyphon(AgentFax) + "', ";
+                    hasChanged = true;
+                }
+                if (AgentEmail != thisAgent.Rows[0]["agent_email"].ToString())
+                {
+                    strSQL = strSQL + "agent_email = '" + MyFormatting.Hyphon(AgentEmail) + "', ";
+                    hasChanged = true;
+                }
+                if (AgentABN != thisAgent.Rows[0]["agent_abn"].ToString())
+                {
+                    strSQL = strSQL + "agent_abn = '" + MyFormatting.Hyphon(AgentABN) + "', ";
+                    hasChanged = true;
+                }
+                if (AgentGSTStatus != Convert.ToBoolean(thisAgent.Rows[0]["agent_gstreg"]))
+                {
+                    strSQL = strSQL + "agent_gstreg = '" + AgentGSTStatus.ToString() + "', ";
+                    hasChanged = true;
+                }
+                if (AgentACN != thisAgent.Rows[0]["agent_acn"].ToString())
+                {
+                    strSQL = strSQL + "agent_acn = '" + MyFormatting.Hyphon(AgentACN) + "', ";
+                    hasChanged = true;
+                }
+                if (AgentBankName != thisAgent.Rows[0]["agent_bankname"].ToString())
+                {
+                    strSQL = strSQL + "agent_bankname = '" + MyFormatting.Hyphon(AgentBankName) + "', ";
+                    hasChanged = true;
+                }
+                if (AgentBranchName != thisAgent.Rows[0]["agent_branch"].ToString())
+                {
+                    strSQL = strSQL + "agent_branch = '" + MyFormatting.Hyphon(AgentBranchName) + "', ";
+                    hasChanged = true;
+                }
+                if (AgentBSB != thisAgent.Rows[0]["agent_bsb"].ToString())
+                {
+                    strSQL = strSQL + "agent_bsb = '" + MyFormatting.Hyphon(AgentBSB) + "', ";
+                    hasChanged = true;
+                }
+                if (AgentAccountNumber != thisAgent.Rows[0]["agent_acccountno"].ToString())
+                {
+                    strSQL = strSQL + "agent_accountno = '" + MyFormatting.Hyphon(AgentAccountNumber) + "', ";
+                    hasChanged = true;
+                }
+                if (AgentReportsPath != thisAgent.Rows[0]["agent_reportpath"].ToString())
+                {
+                    strSQL = strSQL + "agent_reportpath = '" + MyFormatting.Hyphon(AgentReportsPath) + "', ";
+                    hasChanged = true;
+                }
+                if (AgentInvoiceDocument != thisAgent.Rows[0]["agent_invoice"].ToString())
+                {
+                    strSQL = strSQL + "agent_invoice = '" + MyFormatting.Hyphon(AgentInvoiceDocument) + "', ";
+                    hasChanged = true;
+                }
+                if (AgentAccountSaleDocument != thisAgent.Rows[0]["agent_accountsale"].ToString())
+                {
+                    strSQL = strSQL + "agent_accountsale = '" + MyFormatting.Hyphon(AgentAccountSaleDocument) + "', ";
+                    hasChanged = true;
+                }
+                if (AgentUnityAccess != Convert.ToBoolean(thisAgent.Rows[0]["agent_unityaccess"]))
+                {
+                    strSQL = strSQL + "agent_unityaccess = '" + AgentUnityAccess.ToString() + "', ";
+                    hasChanged = true;
+                }
+                if (AgentUnityDBName != thisAgent.Rows[0]["agent_unitydbname"].ToString())
+                {
+                    strSQL = strSQL + "agent_unitydbname = '" + MyFormatting.Hyphon(AgentUnityDBName) + "', ";
+                    hasChanged = true;
+                }
+                if (AgentUnitysaName != thisAgent.Rows[0]["agent_unitysaname"].ToString())
+                {
+                    strSQL = strSQL + "agent_unitysaname = '" + MyFormatting.Hyphon(AgentUnitysaName) + "', ";
+                    hasChanged = true;
+                }
+                if (AgentUnitysapwd != thisAgent.Rows[0]["agent_unitysapwd"].ToString())
+                {
+                    strSQL = strSQL + "agent_unitysapwd = '" + MyFormatting.Hyphon(AgentUnitysapwd) + "', ";
+                    hasChanged = true;
+                }
+                if (AgentComissionRate1 != Convert.ToDouble(thisAgent.Rows[0]["agent_commission1"]))
+                {
+                    strSQL = strSQL + "agent_comission1 = " + AgentComissionRate1.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (AgentComissionRate2 != Convert.ToDouble(thisAgent.Rows[0]["agent_commission2"]))
+                {
+                    strSQL = strSQL + "agent_comission2 = " + AgentComissionRate2.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (AgentComissionRate3 != Convert.ToDouble(thisAgent.Rows[0]["agent_commission3"]))
+                {
+                    strSQL = strSQL + "agent_comission3 = " + AgentComissionRate3.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (AgentComissionRate4 != Convert.ToDouble(thisAgent.Rows[0]["agent_commission4"]))
+                {
+                    strSQL = strSQL + "agent_comission4 = " + AgentComissionRate4.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (AgentComissionRate5 != Convert.ToDouble(thisAgent.Rows[0]["agent_commission5"]))
+                {
+                    strSQL = strSQL + "agent_comission5 = " + AgentComissionRate5.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (AgentChargePremium != Convert.ToBoolean(thisAgent.Rows[0]["agent_chargepremium"]))
+                {
+                    strSQL = strSQL + "agent_chargepremium = '" + AgentChargePremium.ToString() + "', ";
+                    hasChanged = true;
+                }
+                if (AgentPremiumRate1 != Convert.ToDouble(thisAgent.Rows[0]["agent_premium1"]))
+                {
+                    strSQL = strSQL + "agent_premium1 = " + AgentPremiumRate1.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (AgentPremiumRate2 != Convert.ToDouble(thisAgent.Rows[0]["agent_premium2"]))
+                {
+                    strSQL = strSQL + "agent_premium2 = " + AgentPremiumRate2.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (AgentPremiumRate3 != Convert.ToDouble(thisAgent.Rows[0]["agent_premium3"]))
+                {
+                    strSQL = strSQL + "agent_premium3 = " + AgentPremiumRate3.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (AgentPremiumRate4 != Convert.ToDouble(thisAgent.Rows[0]["agent_premium4"]))
+                {
+                    strSQL = strSQL + "agent_premium4 = " + AgentPremiumRate4.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (AgentPremiumRate5 != Convert.ToDouble(thisAgent.Rows[0]["agent_premium5"]))
+                {
+                    strSQL = strSQL + "agent_premium5 = " + AgentPremiumRate5.ToString() + ", ";
+                    hasChanged = true;
+                }
 
                 if (hasChanged == true)
                 {
@@ -1117,7 +1277,477 @@ namespace UNITYCSControlLibrary
     {
         public SqlConnection MyConnection { get; set; } = new SqlConnection();
         public String ErrorMessage { get; set; } = string.Empty;
-        private UNITYCSDataFormatting MyFormatting = new UNITYCSDataFormatting();
 
+        private UNITYCSDataFormatting MyFormatting = new UNITYCSDataFormatting();
+        
+        #region Control Table
+        public Boolean IntegrateUnity { get; set; }
+        public Double CommissionRate1 { get; set; }
+        public Double CommissionRate2 { get; set; }
+        public Double CommissionRate3 { get; set; }
+        public Double CommissionRate4 { get; set; }
+        public Double CommissionRate5 { get; set; }
+        public Boolean ChargePremium { get; set; }
+        public Double PremiumRate1 { get; set; }
+        public Double PremiumRate2 { get; set; }
+        public Double PremiumRate3 { get; set; }
+        public Double PremiumRate4 { get; set; }
+        public Double PremiumRate5 { get; set; }
+        public Int32 NextInvoiceNumber { get; set; }
+        public Int32 NextAccountSaleNumber { get; set; }
+        public DataTable ThisControlRecord { get; set; } = new DataTable();
+
+        public Boolean Get_Control_Record()
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                ThisControlRecord.Clear();
+
+                String strSQL = "SELECT * FROM tblControl";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ThisControlRecord.Load(rdrGet);
+                    isSuccessful = Gather_Control_Record();
+                }
+                rdrGet.Close();
+                cmdGet.Dispose();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Control Record - " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_Control_Record(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                ThisControlRecord.Clear();
+
+                String strSQL = "SELECT * FROM tblControl";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ThisControlRecord.Load(rdrGet);
+                    isSuccessful = Gather_Control_Record();
+                }
+                rdrGet.Close();
+                cmdGet.Dispose();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Control Record - " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Gather_Control_Record()
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                IntegrateUnity = Convert.ToBoolean(ThisControlRecord.Rows[0]["cs_ctrl_unity"]);
+                CommissionRate1 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Commission1"]);
+                CommissionRate2 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Commission2"]);
+                CommissionRate3 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Commission3"]);
+                CommissionRate4 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Commission4"]);
+                CommissionRate5 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Commission5"]);
+                ChargePremium = Convert.ToBoolean(ThisControlRecord.Rows[0]["cs_ctrl_chargepremium"]);
+                PremiumRate1 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Premium1"]);
+                PremiumRate2 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Premium2"]);
+                PremiumRate3 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Premium3"]);
+                PremiumRate4 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Premium4"]);
+                PremiumRate5 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Premium5"]);
+                NextInvoiceNumber = Convert.ToInt32(ThisControlRecord.Rows[0]["cs_ctrl_next_inv"]);
+                NextAccountSaleNumber = Convert.ToInt32(ThisControlRecord.Rows[0]["cs_ctrl_next_acs"]);
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGather Control Record - " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Update_Control_Record(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+            Boolean hasChanged = false;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "UPDATE tblControl SET ";
+
+                if (IntegrateUnity != Convert.ToBoolean(ThisControlRecord.Rows[0]["cs_ctrl_unity"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_unity = '" + IntegrateUnity.ToString() + "', ";
+                    hasChanged = true;
+                }
+                if (CommissionRate1 != Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_commission1"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_commission1 = " + CommissionRate1.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (CommissionRate2 != Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_commission2"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_commission2 = " + CommissionRate2.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (CommissionRate3 != Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_commission3"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_commission3 = " + CommissionRate3.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (CommissionRate4 != Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_commission4"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_commission4 = " + CommissionRate4.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (CommissionRate5 != Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_commission5"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_commission5 = " + CommissionRate1.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (ChargePremium != Convert.ToBoolean(ThisControlRecord.Rows[0]["cs_ctrl_chargepremium"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_chargepremium = '" + ChargePremium.ToString() + "', ";
+                    hasChanged = true;
+                }
+                if (PremiumRate1 != Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Premium1"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_Premium1 = " + PremiumRate1.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (PremiumRate2 != Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Premium2"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_Premium2 = " + PremiumRate2.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (PremiumRate3 != Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Premium3"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_Premium3 = " + PremiumRate3.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (PremiumRate4 != Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Premium4"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_Premium4 = " + PremiumRate4.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (PremiumRate5 != Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Premium5"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_Premium5 = " + PremiumRate1.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (NextInvoiceNumber != Convert.ToInt32(ThisControlRecord.Rows[0]["cs_ctrl_nextinv"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_nextinv = " + NextInvoiceNumber.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (NextAccountSaleNumber != Convert.ToInt32(ThisControlRecord.Rows[0]["cs_ctrl_nextacs"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_nextacs = " + NextAccountSaleNumber.ToString() + ", ";
+                    hasChanged = true;
+                }
+
+                if (hasChanged == true)
+                {
+                    strSQL = strSQL.Substring(0, strSQL.Length - 2);
+                    SqlCommand cmdUpdate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                    cmdUpdate.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nUpdate Control Record - " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        #endregion
+        #region Catalogue Table
+        public Int32 CatalogueVendorId { get; set; }
+        public Int32 CatalogueId { get; set; }
+        public String CatalogueCode { get; set; }
+        public String CatalogueDescription { get; set; }
+        public Double CatalogueReserve { get; set; }
+        public Boolean CatalogueSold { get; set; }
+        public DataTable ThisCatalogueRecord { get; set; } = new DataTable();
+        public DataTable CatalogueRecords { get; set; } = new DataTable();
+
+        public Boolean Insert_Catalogue_Record(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "INSERT INTO tblCatalogue (";
+                strSQL = strSQL + "cs_cat_vendorid, ";
+                strSQL = strSQL + "cs_cat_code, ";
+                strSQL = strSQL + "cs_cat_description, ";
+                strSQL = strSQL + "cs_cat_reserve, ";
+                strSQL = strSQL + "cs_cat_sold) VALUES (";
+                strSQL = strSQL + CatalogueVendorId.ToString() + ", ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(CatalogueCode) + "', "; 
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(CatalogueDescription) + "', "; 
+                strSQL = strSQL + CatalogueReserve.ToString() + ", ";
+                strSQL = strSQL + "'" + CatalogueSold.ToString() + "')";
+                SqlCommand cmdInsert = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                if (cmdInsert.ExecuteNonQuery() != 1)
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nInsert Catalogue Record - More than one record would be inserted !";
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nInsert Catalogue Record - " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_Catalogue_Record(Int32 catId)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+            ThisCatalogueRecord.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblCatalogue WHERE cs_cat_id = " + catId.ToString();
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ThisCatalogueRecord.Load(rdrGet);
+                    isSuccessful = Gather_Catalogue_Record();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record - Catalogue Record with Id " + catId.ToString() + " not found !";
+                }
+                rdrGet.Close();
+                cmdGet.Dispose();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record - " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_Catalogue_Record(Int32 catId, SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+            ThisCatalogueRecord.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblCatalogue WHERE cs_cat_id = " + catId.ToString();
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ThisCatalogueRecord.Load(rdrGet);
+                    isSuccessful = Gather_Catalogue_Record();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record - Catalogue Record with Id " + catId.ToString() + " not found !";
+                }
+                rdrGet.Close();
+                cmdGet.Dispose();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record - " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_Catalogue_Record(String catCode)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+            ThisCatalogueRecord.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblCatalogue WHERE cs_cat_code = '" + catCode + "'";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ThisCatalogueRecord.Load(rdrGet);
+                    isSuccessful = Gather_Catalogue_Record();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record - Catalogue Record with Code " + catCode + " not found !";
+                }
+                rdrGet.Close();
+                cmdGet.Dispose();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record - " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Gather_Catalogue_Record()
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                CatalogueId = Convert.ToInt32(ThisCatalogueRecord.Rows[0]["cs_cat_id"]);
+                CatalogueVendorId = Convert.ToInt32(ThisCatalogueRecord.Rows[0]["cs_cat_vendorid"]);
+                CatalogueCode = ThisCatalogueRecord.Rows[0]["cs_cat_code"].ToString();
+                CatalogueDescription = ThisCatalogueRecord.Rows[0]["cs_cat_description"].ToString();
+                CatalogueSold = Convert.ToBoolean(ThisCatalogueRecord.Rows[0]["cs_cat_sold"]);
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGather Catalogue Record - " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Update_Catalogue_Record(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+            Boolean hasChanged = false;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "UPDATE tblCatalogue SET ";
+
+                if (CatalogueVendorId != Convert.ToInt32(ThisCatalogueRecord.Rows[0]["cs_cat_vendorid"]))
+                {
+                    strSQL = strSQL + "cs_cat_vendorid = " + CatalogueVendorId.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (CatalogueCode != ThisCatalogueRecord.Rows[0]["cs_cat_code"].ToString())
+                {
+                    strSQL = strSQL + "cs_cat_code = '" + MyFormatting.Hyphon(CatalogueCode) + "', ";
+                    hasChanged = true;
+                }
+
+                if (hasChanged == true)
+                {
+                    strSQL = strSQL.Substring(0, strSQL.Length - 2);
+                    strSQL = strSQL + " WHERE cs_cat_id = " + CatalogueId.ToString();
+                    SqlCommand cmdUpdate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                    if (cmdUpdate.ExecuteNonQuery() != 1)
+                    {
+                        isSuccessful = false;
+                        ErrorMessage = "** Operator **\r\n\r\nUpdate Catalogue Record - More than one Catalogue record would be updated !";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nUpdate Catalogue Record - " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        #endregion
+        #region Vendor Table
+        public Int32 VendorId { get; set; }
+        public String VendorUnityCode { get; set; }
+        public String VendorName1 { get; set; }
+        public String VendorName2 { get; set; }
+        public String VendorAddress1 { get; set; }
+        public String VendorAddress2 { get; set; }
+        public String VendorCity { get; set; }
+        public String VendorState { get; set; }
+        public String VendorPostCode { get; set; }
+        public String VendorTelephone { get; set; }
+        public String VendorEmail { get; set; }
+        public String VendorABN { get; set; }
+        public Boolean VendorGSTStatus { get; set; }
+        public Double VendorDefaultCommissionRate { get; set; }
+        public DataTable ThisVendorRecord { get; set; } = new DataTable();
+        public DataTable VendorRecords { get; set; } = new DataTable();
+
+        #endregion
+        #region Buyer Table
+        public Int32 BuyerId { get; set; }
+        public String BuyerUnityCode { get; set; }
+        public String BuyerBidderNumber { get; set; }
+        public String BuyerName1 { get; set; }
+        public String BuyerName2 { get; set; }
+        public String BuyerAddress1 { get; set; }
+        public String BuyerAddress2 { get; set; }
+        public String BuyerCity { get; set; }
+        public String BuyerState { get; set; }
+        public String BuyerPostCode { get; set; }
+        public String BuyerTelephone { get; set; }
+        public String BuyerEmail { get; set; }
+        public String BuyerABN { get; set; }
+
+        public DataTable ThisBuyerRecord { get; set; } = new DataTable();
+        public DataTable BuyerRecords { get; set; } = new DataTable();
+
+        #endregion
+        #region Lot Table
+        public Int32 LotId { get; set; }
+        public String LotNumber { get; set; }
+        public Int32 LotVendorId { get; set; }
+        public Int32 LotCatalogueId { get; set; }
+        public String LotDescription { get; set; }
+        public Double LotQuantity { get; set; }
+        public Double LotPrice { get; set; }
+        public String LotGSTCode { get; set; }
+        public Double LotCommissionRate { get; set; }
+        public Double LotCommission { get; set; }
+        public Int32 LotBuyerid { get; set; }
+        public Double LotPremiumRate { get; set; }
+        public Int32 LotInvoiceId { get; set; }
+        public Int32 LotAccountSaleId { get; set; }
+        public DataTable ThisLotRecord { get; set; } = new DataTable();
+        public DataTable LotRecords { get; set; } = new DataTable();
+
+        #endregion
     }
 }
