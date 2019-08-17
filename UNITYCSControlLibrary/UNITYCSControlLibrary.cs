@@ -1296,7 +1296,77 @@ namespace UNITYCSControlLibrary
         public Int32 NextInvoiceNumber { get; set; }
         public Int32 NextAccountSaleNumber { get; set; }
         public DataTable ThisControlRecord { get; set; } = new DataTable();
+        public Boolean Create_Control_Table(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
 
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "CREATE TABLE tblControl (";
+                strSQL = strSQL + "cs_ctrl_unity bit NOT NULL, ";
+                strSQL = strSQL + "cs_ctrl_commission1 Float NOT NULL, ";
+                strSQL = strSQL + "cs_ctrl_commission2 Float NOT NULL, ";
+                strSQL = strSQL + "cs_ctrl_commission3 Float NOT NULL, ";
+                strSQL = strSQL + "cs_ctrl_commission4 Float NOT NULL, ";
+                strSQL = strSQL + "cs_ctrl_commission5 Float NOT NULL, ";
+                strSQL = strSQL + "cs_ctrl_chargepremium bit NOT NULL, ";
+                strSQL = strSQL + "cs_ctrl_premium1 Float NOT NULL, ";
+                strSQL = strSQL + "cs_ctrl_premium2 Float NOT NULL, ";
+                strSQL = strSQL + "cs_ctrl_premium3 Float NOT NULL, ";
+                strSQL = strSQL + "cs_ctrl_premium4 Float NOT NULL, ";
+                strSQL = strSQL + "cs_ctrl_premium5 Float NOT NULL, ";
+                strSQL = strSQL + "cs_ctrl_next_inv BigInt NOT NULL, ";
+                strSQL = strSQL + "cs_ctrl_next_acs BigInt NOT NULL)";
+                SqlCommand cmdCreate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+
+                cmdCreate.ExecuteNonQuery();
+
+                strSQL = "INSERT INTO tblControl (";
+                strSQL = strSQL + "cs_ctrl_unity, ";
+                strSQL = strSQL + "cs_ctrl_commission1, ";
+                strSQL = strSQL + "cs_ctrl_commission2, ";
+                strSQL = strSQL + "cs_ctrl_commission3, ";
+                strSQL = strSQL + "cs_ctrl_commission4, ";
+                strSQL = strSQL + "cs_ctrl_commission5, ";
+                strSQL = strSQL + "cs_ctrl_chargepremium, ";
+                strSQL = strSQL + "cs_ctrl_premium1, ";
+                strSQL = strSQL + "cs_ctrl_premium2, ";
+                strSQL = strSQL + "cs_ctrl_premium3, ";
+                strSQL = strSQL + "cs_ctrl_premium4, ";
+                strSQL = strSQL + "cs_ctrl_premium5, ";
+                strSQL = strSQL + "cs_ctrl_next_inv, ";
+                strSQL = strSQL + "cs_ctrl_next_acs) VALUES (";
+                strSQL = strSQL + "'False', ";
+                strSQL = strSQL + "0.00, ";
+                strSQL = strSQL + "0.00, ";
+                strSQL = strSQL + "0.00, ";
+                strSQL = strSQL + "0.00, ";
+                strSQL = strSQL + "0.00, ";
+                strSQL = strSQL + "'False', ";
+                strSQL = strSQL + "0.00, ";
+                strSQL = strSQL + "0.00, ";
+                strSQL = strSQL + "0.00, ";
+                strSQL = strSQL + "0.00, ";
+                strSQL = strSQL + "0.00, ";
+                strSQL = strSQL + "1, ";
+                strSQL = strSQL + "1)";
+                SqlCommand cmdInsert = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                if (cmdInsert.ExecuteNonQuery() != 1)
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nCreate Control Table - More than one record would be inserted !";
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nCreate Control Table - " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
         public Boolean Get_Control_Record()
         {
             Boolean isSuccessful = true;
@@ -1318,15 +1388,15 @@ namespace UNITYCSControlLibrary
                 rdrGet.Close();
                 cmdGet.Dispose();
             }
-            catch (Exception ex)
-            {
-                isSuccessful = false;
-                ErrorMessage = "** Operator **\r\n\r\nGet Control Record - " + ex.Message + " !";
-            }
+                catch (Exception ex)
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet Control Record - " + ex.Message + " !";
+                }
 
-            return isSuccessful;
-        }
-        public Boolean Get_Control_Record(SqlTransaction trnEnvelope)
+                return isSuccessful;
+            }
+            public Boolean Get_Control_Record(SqlTransaction trnEnvelope)
         {
             Boolean isSuccessful = true;
 
