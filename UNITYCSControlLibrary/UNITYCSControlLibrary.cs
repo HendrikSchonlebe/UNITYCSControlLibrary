@@ -187,7 +187,30 @@ namespace UNITYCSControlLibrary
         public Double GSTCodeRate { get; set; }
 
         private DataTable thisGSTCode = new DataTable();
+        public Boolean Create_GST_Code_Table(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
 
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "CREATE TABLE tblGSTCodes (";
+                strSQL = strSQL + "gst_code char(1) NOT NULL, ";
+                strSQL = strSQL + "gst_description nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "gst_rate Float NOT NULL)";
+                SqlCommand cmdCreate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+
+                cmdCreate.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nCreate GST Code Table:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
         public Boolean Insert_GST_Code(SqlTransaction trnEnvelope)
         {
             Boolean isSuccessful = true;
@@ -373,6 +396,29 @@ namespace UNITYCSControlLibrary
 
         private DataTable thisCharge = new DataTable();
 
+        public Boolean Create_Charges_Table(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "CREATE TABLE tblCharges (";
+                strSQL = strSQL + "charge_description nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "charge_gstcode char(1) NOT NULL)";
+                SqlCommand cmdCreate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+
+                cmdCreate.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nCreate Charges Table:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
         public Boolean Insert_Charge(SqlTransaction trnEnvelope)
         {
             Boolean isSuccessful = true;
@@ -555,6 +601,27 @@ namespace UNITYCSControlLibrary
 
         private DataTable thisPhrase = new DataTable();
 
+        public Boolean Create_Phrases_Table(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "CREATE TABLE tblPhrases (phrase_description nvarchar(50) NOT NULL)";
+                SqlCommand cmdCreate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+
+                cmdCreate.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nCreate Phrases Table:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
         public Boolean Insert_Phrase(SqlTransaction trnEnvelope)
         {
             Boolean isSuccessful = true;
@@ -728,6 +795,32 @@ namespace UNITYCSControlLibrary
 
         private DataTable ThisSale { get; set; } = new DataTable();
 
+        public Boolean Create_Sales_Table(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "CREATE TABLE tblSales (";
+                strSQL = strSQL + "sales_id BigInt NOT NULL IDENTITY, ";
+                strSQL = strSQL + "sales_description nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "sales_date datetime NOT NULL, ";
+                strSQL = strSQL + "sales_active Bit NOT NULL, ";
+                strSQL = strSQL + "sales_datasource nvarchar(50) NOT NULL)";
+                SqlCommand cmdCreate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+
+                cmdCreate.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nCreate Sales Table:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
         public Boolean Insert_Sale(SqlTransaction trnEnvelope)
         {
             Boolean isSuccessful = true;
@@ -966,6 +1059,63 @@ namespace UNITYCSControlLibrary
 
         private DataTable thisAgent = new DataTable();
 
+        public Boolean Create_Agent_Table(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "CREATE TABLE tblAgent (";
+                strSQL = strSQL + "agent_name1 nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "agent_name2 nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "agent_street nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "agent_city nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "agent_state nvarchar(3) NOT NULL, ";
+                strSQL = strSQL + "agent_postcode nvarchar(5) NOT NULL, ";
+                strSQL = strSQL + "agent_mailingstreet nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "agent_mailingcity nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "agent_mailingstate nvarchar(3) NOT NULL, ";
+                strSQL = strSQL + "agent_mailingpostcode nvarchar(5) NOT NULL, ";
+                strSQL = strSQL + "agent_telephone nvarchar(15) NOT NULL, ";
+                strSQL = strSQL + "agent_fax nvarchar(15) NOT NULL, ";
+                strSQL = strSQL + "agent_email nvarchar(128) NOT NULL, ";
+                strSQL = strSQL + "agent_abn nvarchar(15) NOT NULL, ";
+                strSQL = strSQL + "agent_bankname nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "agent_branch nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "agent_bsb nvarchar(7) NOT NULL, ";
+                strSQL = strSQL + "agent_accountno nvarchar(15) NOT NULL, ";
+                strSQL = strSQL + "agent_reportpath nvarchar(128) NOT NULL, ";
+                strSQL = strSQL + "agent_invoice nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "agent_accountsale nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "agent_unityaccess bit NOT NULL, ";
+                strSQL = strSQL + "agent_unitydbname nvarchar(15) NOT NULL, ";
+                strSQL = strSQL + "agent_unitysaname nvarchar(15) NOT NULL, ";
+                strSQL = strSQL + "agent_unitysapwd nvarchar(15) NOT NULL, ";
+                strSQL = strSQL + "agent_commission1 Float NOT NULL, ";
+                strSQL = strSQL + "agent_commission2 Float NOT NULL, ";
+                strSQL = strSQL + "agent_commission3 Float NOT NULL, ";
+                strSQL = strSQL + "agent_commission4 Float NOT NULL, ";
+                strSQL = strSQL + "agent_commission5 Float NOT NULL, ";
+                strSQL = strSQL + "agent_chargepremium bit NOT NULL, ";
+                strSQL = strSQL + "agent_premium1 Float NOT NULL, ";
+                strSQL = strSQL + "agent_premium2 Float NOT NULL, ";
+                strSQL = strSQL + "agent_premium3 Float NOT NULL, ";
+                strSQL = strSQL + "agent_premium4 Float NOT NULL, ";
+                strSQL = strSQL + "agent_premium5 Float NOT NULL)";
+                SqlCommand cmdCreate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+
+                cmdCreate.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nCreate Agent's Table:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
         public Boolean Get_Agent_Details()
         {
             Boolean isSuccessful = true;
