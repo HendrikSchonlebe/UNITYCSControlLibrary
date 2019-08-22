@@ -76,7 +76,7 @@ namespace UNITYCSControlLibrary
             }
             catch (Exception ex)
             {
-                ErrorMessage = "** Operator **\r\n\r\nData Validation - IsBSB " + ex.Message + " !";
+                ErrorMessage = "** Operator **\r\n\r\nData Validation: IsBSB " + ex.Message + " !";
             }
 
             return logValid;
@@ -95,7 +95,7 @@ namespace UNITYCSControlLibrary
             }
             catch (Exception ex)
             {
-                ErrorMessage = "** Operator **\r\n\r\nData Validation - IsEmailAddress " + ex.Message + " !";
+                ErrorMessage = "** Operator **\r\n\r\nData Validation: IsEmailAddress " + ex.Message + " !";
             }
 
             return logValid;
@@ -166,7 +166,7 @@ namespace UNITYCSControlLibrary
             }
 
             if (isValid == false)
-                ErrorMessage = "** Operator **\r\n\r\n" + ERROR_MESSAGES[_errorCode] + " !";
+                ErrorMessage = ERROR_MESSAGES[_errorCode] + " !";
 
             return isValid;
         }
@@ -1033,7 +1033,6 @@ namespace UNITYCSControlLibrary
         public String AgentEmail { get; set; }
         public String AgentABN { get; set; }
         public Boolean AgentGSTStatus { get; set; }
-        public String AgentACN { get; set; }
         public String AgentBankName { get; set; }
         public String AgentBranchName { get; set; }
         public String AgentBSB { get; set; }
@@ -1085,6 +1084,7 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + "agent_bankname nvarchar(50) NOT NULL, ";
                 strSQL = strSQL + "agent_branch nvarchar(50) NOT NULL, ";
                 strSQL = strSQL + "agent_bsb nvarchar(7) NOT NULL, ";
+                strSQL = strSQL + "agent_gstreg bit NOT NULL, ";
                 strSQL = strSQL + "agent_accountno nvarchar(15) NOT NULL, ";
                 strSQL = strSQL + "agent_reportpath nvarchar(128) NOT NULL, ";
                 strSQL = strSQL + "agent_invoice nvarchar(50) NOT NULL, ";
@@ -1112,6 +1112,104 @@ namespace UNITYCSControlLibrary
             {
                 isSuccessful = false;
                 ErrorMessage = "** Operator **\r\n\r\nCreate Agent's Table:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Insert_Agent(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "INSERT INTO tblAgent (";
+                strSQL = strSQL + "agent_name1, ";
+                strSQL = strSQL + "agent_name2, ";
+                strSQL = strSQL + "agent_street, ";
+                strSQL = strSQL + "agent_city, ";
+                strSQL = strSQL + "agent_state, ";
+                strSQL = strSQL + "agent_postcode, ";
+                strSQL = strSQL + "agent_mailingstreet, ";
+                strSQL = strSQL + "agent_mailingcity, ";
+                strSQL = strSQL + "agent_mailingstate, ";
+                strSQL = strSQL + "agent_mailingpostcode, ";
+                strSQL = strSQL + "agent_telephone, ";
+                strSQL = strSQL + "agent_fax, ";
+                strSQL = strSQL + "agent_email, ";
+                strSQL = strSQL + "agent_abn, ";
+                strSQL = strSQL + "agent_gstreg, ";
+                strSQL = strSQL + "agent_bankname, ";
+                strSQL = strSQL + "agent_branch, ";
+                strSQL = strSQL + "agent_bsb, ";
+                strSQL = strSQL + "agent_accountno, ";
+                strSQL = strSQL + "agent_reportpath, ";
+                strSQL = strSQL + "agent_invoice, ";
+                strSQL = strSQL + "agent_accountsale, ";
+                strSQL = strSQL + "agent_unityaccess, ";
+                strSQL = strSQL + "agent_unitydbname, ";
+                strSQL = strSQL + "agent_unitysaname, ";
+                strSQL = strSQL + "agent_unitysapwd, ";
+                strSQL = strSQL + "agent_commission1, ";
+                strSQL = strSQL + "agent_commission2, ";
+                strSQL = strSQL + "agent_commission3, ";
+                strSQL = strSQL + "agent_commission4, ";
+                strSQL = strSQL + "agent_commission5, ";
+                strSQL = strSQL + "agent_chargepremium, ";
+                strSQL = strSQL + "agent_premium1, ";
+                strSQL = strSQL + "agent_premium2, ";
+                strSQL = strSQL + "agent_premium3, ";
+                strSQL = strSQL + "agent_premium4, ";
+                strSQL = strSQL + "agent_premium5) VALUES (";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentName1) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentName2) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentStreetAddress) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentCityAddress) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentState) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentPostCode) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentMailingStreet) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentMailingCity) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentMailingState) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentMailingPostCode) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentTelephone) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentFax) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentEmail) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentABN) + "', ";
+                strSQL = strSQL + "'" + AgentGSTStatus.ToString() + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentBankName) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentBranchName) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentBSB) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentAccountNumber) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentReportsPath) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentInvoiceDocument) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentAccountSaleDocument) + "', ";
+                strSQL = strSQL + "'" + AgentUnityAccess.ToString() + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentUnityDBName) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentUnitysaName) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentUnitysapwd) + "', ";
+                strSQL = strSQL + AgentComissionRate1.ToString() + ", ";
+                strSQL = strSQL + AgentComissionRate2.ToString() + ", ";
+                strSQL = strSQL + AgentComissionRate3.ToString() + ", ";
+                strSQL = strSQL + AgentComissionRate4.ToString() + ", ";
+                strSQL = strSQL + AgentComissionRate5.ToString() + ", ";
+                strSQL = strSQL + "'" + AgentChargePremium.ToString() + "', ";
+                strSQL = strSQL + AgentPremiumRate1.ToString() + ", ";
+                strSQL = strSQL + AgentPremiumRate2.ToString() + ", ";
+                strSQL = strSQL + AgentPremiumRate3.ToString() + ", ";
+                strSQL = strSQL + AgentPremiumRate4.ToString() + ", ";
+                strSQL = strSQL + AgentPremiumRate5.ToString() + ")";
+                SqlCommand cmdInsert = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                if (cmdInsert.ExecuteNonQuery() != 1)
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nInsert Agent:\r\n\r\nMore than one record would be inserted !";
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nInsert Agent:\r\n\r\n" + ex.Message + " !";
             }
 
             return isSuccessful;
@@ -1172,7 +1270,6 @@ namespace UNITYCSControlLibrary
                 AgentEmail = thisAgent.Rows[0]["agent_email"].ToString();
                 AgentABN = thisAgent.Rows[0]["agent_abn"].ToString();
                 AgentGSTStatus = Convert.ToBoolean(thisAgent.Rows[0]["agent_gstreg"]);
-                AgentACN = thisAgent.Rows[0]["agent_acn"].ToString();
                 AgentBankName = thisAgent.Rows[0]["agent_bankname"].ToString();
                 AgentBranchName = thisAgent.Rows[0]["agent_branch"].ToString();
                 AgentBSB = thisAgent.Rows[0]["agent_bsb"].ToString();
@@ -1290,11 +1387,6 @@ namespace UNITYCSControlLibrary
                     strSQL = strSQL + "agent_gstreg = '" + AgentGSTStatus.ToString() + "', ";
                     hasChanged = true;
                 }
-                if (AgentACN != thisAgent.Rows[0]["agent_acn"].ToString())
-                {
-                    strSQL = strSQL + "agent_acn = '" + MyFormatting.Hyphon(AgentACN) + "', ";
-                    hasChanged = true;
-                }
                 if (AgentBankName != thisAgent.Rows[0]["agent_bankname"].ToString())
                 {
                     strSQL = strSQL + "agent_bankname = '" + MyFormatting.Hyphon(AgentBankName) + "', ";
@@ -1310,7 +1402,7 @@ namespace UNITYCSControlLibrary
                     strSQL = strSQL + "agent_bsb = '" + MyFormatting.Hyphon(AgentBSB) + "', ";
                     hasChanged = true;
                 }
-                if (AgentAccountNumber != thisAgent.Rows[0]["agent_acccountno"].ToString())
+                if (AgentAccountNumber != thisAgent.Rows[0]["agent_accountno"].ToString())
                 {
                     strSQL = strSQL + "agent_accountno = '" + MyFormatting.Hyphon(AgentAccountNumber) + "', ";
                     hasChanged = true;
@@ -1352,27 +1444,27 @@ namespace UNITYCSControlLibrary
                 }
                 if (AgentComissionRate1 != Convert.ToDouble(thisAgent.Rows[0]["agent_commission1"]))
                 {
-                    strSQL = strSQL + "agent_comission1 = " + AgentComissionRate1.ToString() + ", ";
+                    strSQL = strSQL + "agent_commission1 = " + AgentComissionRate1.ToString() + ", ";
                     hasChanged = true;
                 }
                 if (AgentComissionRate2 != Convert.ToDouble(thisAgent.Rows[0]["agent_commission2"]))
                 {
-                    strSQL = strSQL + "agent_comission2 = " + AgentComissionRate2.ToString() + ", ";
+                    strSQL = strSQL + "agent_commission2 = " + AgentComissionRate2.ToString() + ", ";
                     hasChanged = true;
                 }
                 if (AgentComissionRate3 != Convert.ToDouble(thisAgent.Rows[0]["agent_commission3"]))
                 {
-                    strSQL = strSQL + "agent_comission3 = " + AgentComissionRate3.ToString() + ", ";
+                    strSQL = strSQL + "agent_commission3 = " + AgentComissionRate3.ToString() + ", ";
                     hasChanged = true;
                 }
                 if (AgentComissionRate4 != Convert.ToDouble(thisAgent.Rows[0]["agent_commission4"]))
                 {
-                    strSQL = strSQL + "agent_comission4 = " + AgentComissionRate4.ToString() + ", ";
+                    strSQL = strSQL + "agent_commission4 = " + AgentComissionRate4.ToString() + ", ";
                     hasChanged = true;
                 }
                 if (AgentComissionRate5 != Convert.ToDouble(thisAgent.Rows[0]["agent_commission5"]))
                 {
-                    strSQL = strSQL + "agent_comission5 = " + AgentComissionRate5.ToString() + ", ";
+                    strSQL = strSQL + "agent_commission5 = " + AgentComissionRate5.ToString() + ", ";
                     hasChanged = true;
                 }
                 if (AgentChargePremium != Convert.ToBoolean(thisAgent.Rows[0]["agent_chargepremium"]))
@@ -1506,13 +1598,13 @@ namespace UNITYCSControlLibrary
                 if (cmdInsert.ExecuteNonQuery() != 1)
                 {
                     isSuccessful = false;
-                    ErrorMessage = "** Operator **\r\n\r\nCreate Control Table - More than one record would be inserted !";
+                    ErrorMessage = "** Operator **\r\n\r\nCreate Control Table: More than one record would be inserted !";
                 }
             }
             catch (Exception ex)
             {
                 isSuccessful = false;
-                ErrorMessage = "** Operator **\r\n\r\nCreate Control Table - " + ex.Message + " !";
+                ErrorMessage = "** Operator **\r\n\r\nCreate Control Table: " + ex.Message + " !";
             }
 
             return isSuccessful;
@@ -1541,7 +1633,7 @@ namespace UNITYCSControlLibrary
                 catch (Exception ex)
                 {
                     isSuccessful = false;
-                    ErrorMessage = "** Operator **\r\n\r\nGet Control Record - " + ex.Message + " !";
+                    ErrorMessage = "** Operator **\r\n\r\nGet Control Record: " + ex.Message + " !";
                 }
 
                 return isSuccessful;
@@ -1570,7 +1662,7 @@ namespace UNITYCSControlLibrary
             catch (Exception ex)
             {
                 isSuccessful = false;
-                ErrorMessage = "** Operator **\r\n\r\nGet Control Record - " + ex.Message + " !";
+                ErrorMessage = "** Operator **\r\n\r\nGet Control Record: " + ex.Message + " !";
             }
 
             return isSuccessful;
@@ -1601,7 +1693,7 @@ namespace UNITYCSControlLibrary
             catch (Exception ex)
             {
                 isSuccessful = false;
-                ErrorMessage = "** Operator **\r\n\r\nGather Control Record - " + ex.Message + " !";
+                ErrorMessage = "** Operator **\r\n\r\nGather Control Record: " + ex.Message + " !";
             }
 
             return isSuccessful;
@@ -1698,7 +1790,7 @@ namespace UNITYCSControlLibrary
             catch (Exception ex)
             {
                 isSuccessful = false;
-                ErrorMessage = "** Operator **\r\n\r\nUpdate Control Record - " + ex.Message + " !";
+                ErrorMessage = "** Operator **\r\n\r\nUpdate Control Record: " + ex.Message + " !";
             }
 
             return isSuccessful;
@@ -1714,6 +1806,33 @@ namespace UNITYCSControlLibrary
         public DataTable ThisCatalogueRecord { get; set; } = new DataTable();
         public DataTable CatalogueRecords { get; set; } = new DataTable();
 
+        public Boolean Create_Catalogue_Table(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "CREATE TABLE tblCatalogue (";
+                strSQL = strSQL + "cs_cat_id Bigint NOT NULL IDENTITY, ";
+                strSQL = strSQL + "cs_cat_vendorid Bigint NOT NULL, ";
+                strSQL = strSQL + "cs_cat_code nvarchar(5) NOT NULL, ";
+                strSQL = strSQL + "cs_cat_description nvarchar(200) NOT NULL, ";
+                strSQL = strSQL + "cs_cat_reserve float NOT NULL, ";
+                strSQL = strSQL + "cs_cat_sold bit NOT NULL)";
+                SqlCommand cmdCreate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+
+                cmdCreate.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nCreate Catalogue Table: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
         public Boolean Insert_Catalogue_Record(SqlTransaction trnEnvelope)
         {
             Boolean isSuccessful = true;
@@ -1729,21 +1848,21 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + "cs_cat_reserve, ";
                 strSQL = strSQL + "cs_cat_sold) VALUES (";
                 strSQL = strSQL + CatalogueVendorId.ToString() + ", ";
-                strSQL = strSQL + "'" + MyFormatting.Hyphon(CatalogueCode) + "', "; 
-                strSQL = strSQL + "'" + MyFormatting.Hyphon(CatalogueDescription) + "', "; 
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(CatalogueCode) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(CatalogueDescription) + "', ";
                 strSQL = strSQL + CatalogueReserve.ToString() + ", ";
                 strSQL = strSQL + "'" + CatalogueSold.ToString() + "')";
                 SqlCommand cmdInsert = new SqlCommand(strSQL, MyConnection, trnEnvelope);
                 if (cmdInsert.ExecuteNonQuery() != 1)
                 {
                     isSuccessful = false;
-                    ErrorMessage = "** Operator **\r\n\r\nInsert Catalogue Record - More than one record would be inserted !";
+                    ErrorMessage = "** Operator **\r\n\r\nInsert Catalogue Record: More than one record would be inserted !";
                 }
             }
             catch (Exception ex)
             {
                 isSuccessful = false;
-                ErrorMessage = "** Operator **\r\n\r\nInsert Catalogue Record - " + ex.Message + " !";
+                ErrorMessage = "** Operator **\r\n\r\nInsert Catalogue Record: " + ex.Message + " !";
             }
 
             return isSuccessful;
@@ -1768,7 +1887,7 @@ namespace UNITYCSControlLibrary
                 else
                 {
                     isSuccessful = false;
-                    ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record - Catalogue Record with Id " + catId.ToString() + " not found !";
+                    ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record: Catalogue Record with Id " + catId.ToString() + " not found !";
                 }
                 rdrGet.Close();
                 cmdGet.Dispose();
@@ -1776,7 +1895,7 @@ namespace UNITYCSControlLibrary
             catch (Exception ex)
             {
                 isSuccessful = false;
-                ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record - " + ex.Message + " !";
+                ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record: " + ex.Message + " !";
             }
 
             return isSuccessful;
@@ -1801,7 +1920,7 @@ namespace UNITYCSControlLibrary
                 else
                 {
                     isSuccessful = false;
-                    ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record - Catalogue Record with Id " + catId.ToString() + " not found !";
+                    ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record: Catalogue Record with Id " + catId.ToString() + " not found !";
                 }
                 rdrGet.Close();
                 cmdGet.Dispose();
@@ -1809,7 +1928,7 @@ namespace UNITYCSControlLibrary
             catch (Exception ex)
             {
                 isSuccessful = false;
-                ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record - " + ex.Message + " !";
+                ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record: " + ex.Message + " !";
             }
 
             return isSuccessful;
@@ -1834,7 +1953,7 @@ namespace UNITYCSControlLibrary
                 else
                 {
                     isSuccessful = false;
-                    ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record - Catalogue Record with Code " + catCode + " not found !";
+                    ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record: Catalogue Record with Code " + catCode + " not found !";
                 }
                 rdrGet.Close();
                 cmdGet.Dispose();
@@ -1842,7 +1961,7 @@ namespace UNITYCSControlLibrary
             catch (Exception ex)
             {
                 isSuccessful = false;
-                ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record - " + ex.Message + " !";
+                ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record: " + ex.Message + " !";
             }
 
             return isSuccessful;
@@ -1859,12 +1978,13 @@ namespace UNITYCSControlLibrary
                 CatalogueVendorId = Convert.ToInt32(ThisCatalogueRecord.Rows[0]["cs_cat_vendorid"]);
                 CatalogueCode = ThisCatalogueRecord.Rows[0]["cs_cat_code"].ToString();
                 CatalogueDescription = ThisCatalogueRecord.Rows[0]["cs_cat_description"].ToString();
+                CatalogueReserve = Convert.ToDouble(ThisCatalogueRecord.Rows[0]["cs_cat_reserve"]);
                 CatalogueSold = Convert.ToBoolean(ThisCatalogueRecord.Rows[0]["cs_cat_sold"]);
             }
             catch (Exception ex)
             {
                 isSuccessful = false;
-                ErrorMessage = "** Operator **\r\n\r\nGather Catalogue Record - " + ex.Message + " !";
+                ErrorMessage = "** Operator **\r\n\r\nGather Catalogue Record: " + ex.Message + " !";
             }
 
             return isSuccessful;
@@ -1890,6 +2010,21 @@ namespace UNITYCSControlLibrary
                     strSQL = strSQL + "cs_cat_code = '" + MyFormatting.Hyphon(CatalogueCode) + "', ";
                     hasChanged = true;
                 }
+                if (CatalogueDescription !=  ThisCatalogueRecord.Rows[0]["cs_cat_decription"].ToString())
+                {
+                    strSQL = strSQL + "cs_cat_description = '" + MyFormatting.Hyphon(CatalogueDescription) + "', ";
+                    hasChanged = true;
+                }
+                if (CatalogueReserve != Convert.ToDouble(ThisCatalogueRecord.Rows[0]["cs_cat_reserve"]))
+                {
+                    strSQL = strSQL + "cs_cat_reserve = " + CatalogueReserve.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (CatalogueSold != Convert.ToBoolean(ThisCatalogueRecord.Rows[0]["cs_cat_sold"]))
+                {
+                    strSQL = strSQL + "cs_cat_sold = '" + CatalogueSold.ToString() + "', ";
+                    hasChanged = true;
+                }
 
                 if (hasChanged == true)
                 {
@@ -1899,14 +2034,14 @@ namespace UNITYCSControlLibrary
                     if (cmdUpdate.ExecuteNonQuery() != 1)
                     {
                         isSuccessful = false;
-                        ErrorMessage = "** Operator **\r\n\r\nUpdate Catalogue Record - More than one Catalogue record would be updated !";
+                        ErrorMessage = "** Operator **\r\n\r\nUpdate Catalogue Record: More than one Catalogue record would be updated !";
                     }
                 }
             }
             catch (Exception ex)
             {
                 isSuccessful = false;
-                ErrorMessage = "** Operator **\r\n\r\nUpdate Catalogue Record - " + ex.Message + " !";
+                ErrorMessage = "** Operator **\r\n\r\nUpdate Catalogue Record: " + ex.Message + " !";
             }
 
             return isSuccessful;
@@ -1923,6 +2058,7 @@ namespace UNITYCSControlLibrary
         public String VendorState { get; set; }
         public String VendorPostCode { get; set; }
         public String VendorTelephone { get; set; }
+        public String VendorMobile { get; set; }
         public String VendorEmail { get; set; }
         public String VendorABN { get; set; }
         public Boolean VendorGSTStatus { get; set; }
@@ -1930,6 +2066,358 @@ namespace UNITYCSControlLibrary
         public DataTable ThisVendorRecord { get; set; } = new DataTable();
         public DataTable VendorRecords { get; set; } = new DataTable();
 
+        public Boolean Create_Vendor_Table(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "CREATE TABLE tblVendors (";
+                strSQL = strSQL + "cs_vendor_id Bigint NOT NULL IDENTITY, ";
+                strSQL = strSQL + "cs_vendor_unity nvarchar(5) NOT NULL, ";
+                strSQL = strSQL + "cs_vendor_name1 nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "cs_vendor_name2 nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "cs_vendor_address1 nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "cs_vendor_address2 nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "cs_vendor_city nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "cs_vendor_state nvarchar(3) NOT NULL, ";
+                strSQL = strSQL + "cs_vendor_postcode nvarchar(5) NOT NULL, ";
+                strSQL = strSQL + "cs_vendor_telephone nvarchar(15) NOT NULL, ";
+                strSQL = strSQL + "cs_vendor_mobile nvarchar(15) NOT NULL, ";
+                strSQL = strSQL + "cs_vendor_email nvarchar(128) NOT NULL, ";
+                strSQL = strSQL + "cs_vendor_abn nvarchar(15) NOT NULL, ";
+                strSQL = strSQL + "cs_vendor_gststatus bit NOT NULL, ";
+                strSQL = strSQL + "cs_vendor_commissionrate float NOT NULL)";
+                SqlCommand cmdCreate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+
+                cmdCreate.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nCreate Vendors Table: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Insert_Vendor(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "INSERT INTO tblVendors (";
+                strSQL = strSQL + "cs_vendor_unity, ";
+                strSQL = strSQL + "cs_vendor_name1, ";
+                strSQL = strSQL + "cs_vendor_name2, ";
+                strSQL = strSQL + "cs_vendor_address1, ";
+                strSQL = strSQL + "cs_vendor_address2, ";
+                strSQL = strSQL + "cs_vendor_city, ";
+                strSQL = strSQL + "cs_vendor_state, ";
+                strSQL = strSQL + "cs_vendor_postcode, ";
+                strSQL = strSQL + "cs_vendor_telephone, ";
+                strSQL = strSQL + "cs_vendor_mobile, ";
+                strSQL = strSQL + "cs_vendor_email, ";
+                strSQL = strSQL + "cs_vendor_abn, ";
+                strSQL = strSQL + "cs_vendor_gststatus, ";
+                strSQL = strSQL + "cs_vendor_commissionrate) VALUES (";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(VendorUnityCode.ToString()) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(VendorName1) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(VendorName2) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(VendorAddress1) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(VendorAddress2) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(VendorCity) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(VendorState) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(VendorPostCode) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(VendorTelephone) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(VendorMobile) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(VendorEmail) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(VendorABN) + "', ";
+                strSQL = strSQL + "'" + VendorGSTStatus.ToString() + "', ";
+                strSQL = strSQL + VendorDefaultCommissionRate.ToString() + ")";
+                SqlCommand cmdInsert = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                if (cmdInsert.ExecuteNonQuery() != 1)
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nInsert Vendor Record: More than one record would be inserted !";
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nInsert Vendor Record: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_Vendor(Int32 vendorId)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                ThisVendorRecord.Clear();
+
+                String strSQL = "SELECT * FROM tblVendors WHERE cs_vendor_id = " + vendorId.ToString();
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ThisVendorRecord.Load(rdrGet);
+                    isSuccessful = Gather_Vendor();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet Vendor Record: Vendor with Id " + vendorId.ToString() + " not found !";
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Vendor Record: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_Vendor(Int32 vendorId, SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                ThisVendorRecord.Clear();
+
+                String strSQL = "SELECT * FROM tblVendors WHERE cs_vendor_id = " + vendorId.ToString();
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ThisVendorRecord.Load(rdrGet);
+                    isSuccessful = Gather_Vendor();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet Vendor Record: Vendor with Id " + vendorId.ToString() + " not found !";
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Vendor Record: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Gather_Vendor()
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                VendorId = Convert.ToInt32(ThisVendorRecord.Rows[0]["cs_vendor_id"]);
+                VendorUnityCode = ThisVendorRecord.Rows[0]["cs_vendor_unity"].ToString();
+                VendorName1 = ThisVendorRecord.Rows[0]["cs_vendor_name1"].ToString();
+                VendorName2 = ThisVendorRecord.Rows[0]["cs_vendor_name2"].ToString();
+                VendorAddress1 = ThisVendorRecord.Rows[0]["cs_vendor_address1"].ToString();
+                VendorAddress2 = ThisVendorRecord.Rows[0]["cs_vendor_address2"].ToString();
+                VendorCity = ThisVendorRecord.Rows[0]["cs_vendor_city"].ToString();
+                VendorState = ThisVendorRecord.Rows[0]["cs_vendor_state"].ToString();
+                VendorPostCode = ThisVendorRecord.Rows[0]["cs_vendor_postcode"].ToString();
+                VendorTelephone = ThisVendorRecord.Rows[0]["cs_vendor_telephone"].ToString();
+                VendorMobile = ThisVendorRecord.Rows[0]["cs_vendor_mobile"].ToString();
+                VendorEmail = ThisVendorRecord.Rows[0]["cs_vendor_email"].ToString();
+                VendorABN = ThisVendorRecord.Rows[0]["cs_vendor_abn"].ToString();
+                VendorGSTStatus = Convert.ToBoolean(ThisVendorRecord.Rows[0]["cs_vendor_gststatus"]);
+                VendorDefaultCommissionRate = Convert.ToDouble(ThisVendorRecord.Rows[0]["cs_vendor_commissionrate"]);
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGather Vendor Record: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Update_Vendor(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+            Boolean hasChanged = false;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "UPDATE tblVendors SET ";
+                if (VendorUnityCode != ThisVendorRecord.Rows[0]["cs_vendor_unity"].ToString())
+                {
+                    strSQL = strSQL + "cs_vendor_unity = '" + MyFormatting.Hyphon(VendorUnityCode) + "', ";
+                    hasChanged = true;
+                }
+                if (VendorName1 != ThisVendorRecord.Rows[0]["cs_vendor_name1"].ToString())
+                {
+                    strSQL = strSQL + "cs_vendor_name1 = '" + MyFormatting.Hyphon(VendorName1) + "', ";
+                    hasChanged = true;
+                }
+                if (VendorName2 != ThisVendorRecord.Rows[0]["cs_vendor_name2"].ToString())
+                {
+                    strSQL = strSQL + "cs_vendor_name2 = '" + MyFormatting.Hyphon(VendorName2) + "', ";
+                    hasChanged = true;
+                }
+                if (VendorAddress1 != ThisVendorRecord.Rows[0]["cs_vendor_address1"].ToString())
+                {
+                    strSQL = strSQL + "cs_vendor_address1 = '" + MyFormatting.Hyphon(VendorAddress1) + "', ";
+                    hasChanged = true;
+                }
+                if (VendorAddress2 != ThisVendorRecord.Rows[0]["cs_vendor_address2"].ToString())
+                {
+                    strSQL = strSQL + "cs_vendor_address2 = '" + MyFormatting.Hyphon(VendorAddress2) + "', ";
+                    hasChanged = true;
+                }
+                if (VendorCity != ThisVendorRecord.Rows[0]["cs_vendor_city"].ToString())
+                {
+                    strSQL = strSQL + "cs_vendor_city = '" + MyFormatting.Hyphon(VendorCity) + "', ";
+                    hasChanged = true;
+                }
+                if (VendorState != ThisVendorRecord.Rows[0]["cs_vendor_state"].ToString())
+                {
+                    strSQL = strSQL + "cs_vendor_state = '" + MyFormatting.Hyphon(VendorState) + "', ";
+                    hasChanged = true;
+                }
+                if (VendorPostCode != ThisVendorRecord.Rows[0]["cs_vendor_postcode"].ToString())
+                {
+                    strSQL = strSQL + "cs_vendor_postcode = '" + MyFormatting.Hyphon(VendorPostCode) + "', ";
+                    hasChanged = true;
+                }
+                if (VendorTelephone != ThisVendorRecord.Rows[0]["cs_vendor_telephone"].ToString())
+                {
+                    strSQL = strSQL + "cs_vendor_telephone = '" + MyFormatting.Hyphon(VendorTelephone) + "', ";
+                    hasChanged = true;
+                }
+                if (VendorMobile != ThisVendorRecord.Rows[0]["cs_vendor_mobile"].ToString())
+                {
+                    strSQL = strSQL + "cs_vendor_mobile = '" + MyFormatting.Hyphon(VendorMobile) + "', ";
+                    hasChanged = true;
+                }
+                if (VendorEmail != ThisVendorRecord.Rows[0]["cs_vendor_email"].ToString())
+                {
+                    strSQL = strSQL + "cs_vendor_email = '" + MyFormatting.Hyphon(VendorEmail) + "', ";
+                    hasChanged = true;
+                }
+                if (VendorABN != ThisVendorRecord.Rows[0]["cs_vendor_abn"].ToString())
+                {
+                    strSQL = strSQL + "cs_vendor_abn = '" + MyFormatting.Hyphon(VendorABN) + "', ";
+                    hasChanged = true;
+                }
+                if (VendorGSTStatus != Convert.ToBoolean(ThisVendorRecord.Rows[0]["cs_vendor_gststatus"]))
+                {
+                    strSQL = strSQL + "cs_vendor_gststatus = '" + VendorGSTStatus.ToString() + "', ";
+                    hasChanged = true;
+                }
+                if (VendorDefaultCommissionRate != Convert.ToDouble(ThisVendorRecord.Rows[0]["cs_vendor_commissionrate"]))
+                {
+                    strSQL = strSQL + "cs_vendor_commissionrate = " + VendorDefaultCommissionRate.ToString() + ", ";
+                    hasChanged = true;
+                }
+
+                if (hasChanged == true)
+                {
+                    strSQL = strSQL.Substring(0, strSQL.Length - 2);
+                    strSQL = strSQL + " WHERE cs_vendor_id = " + VendorId.ToString();
+                    SqlCommand cmdUpdate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                    if (cmdUpdate.ExecuteNonQuery() != 1)
+                    {
+                        isSuccessful = false;
+                        ErrorMessage = "** Operator **\r\n\r\nUpdate Vendor Record: More than one record would be updated !";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nUpdate Vendor Record: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Can_Delete_Vendor(Int32 vendorId)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblCatalogue WHERE cs_cat_vendorid  = " + vendorId.ToString();
+                SqlCommand cmdGetC = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGetC = cmdGetC.ExecuteReader();
+                if (rdrGetC.HasRows == true)
+                {
+                    isSuccessful = false;
+                    ErrorMessage = ErrorMessage + "There are Catalogue records associated with this Vendor !\r\n";
+                }
+                rdrGetC.Close();
+
+                strSQL = "SLECT * FROM tblLots WHERE cs_lot_vendorid = " + vendorId.ToString();
+                SqlCommand cmdGetL = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGetL = cmdGetL.ExecuteReader();
+                if (rdrGetL.HasRows == true)
+                {
+                    isSuccessful = false;
+                    ErrorMessage = ErrorMessage + "There are Auction Lots associated with this Vendor !\r\n";
+                }
+                rdrGetL.Close();
+
+                if (isSuccessful == false)
+                {
+                    ErrorMessage = "** Operator **\r\n\r\nTest if Vendor can be Deleted:\r\n\r\n" + ErrorMessage;
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nTest if Vendor can be Deleted: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Delete_Vendor(SqlTransaction trnEnvelope, Int32 vendorId)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "DELETE FROM tblVendors WHERE cs_vendor_id = " + vendorId.ToString();
+                SqlCommand cmdDelete = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                if (cmdDelete.ExecuteNonQuery() != 1)
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nDelete Vendor Record: More than one record would be deleted !";
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nDelete Vendor Record: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
         #endregion
         #region Buyer Table
         public Int32 BuyerId { get; set; }
@@ -1943,11 +2431,412 @@ namespace UNITYCSControlLibrary
         public String BuyerState { get; set; }
         public String BuyerPostCode { get; set; }
         public String BuyerTelephone { get; set; }
+        public String BuyerMobile { get; set; }
         public String BuyerEmail { get; set; }
-        public String BuyerABN { get; set; }
+        public Double BuyerDefaultPremium { get; set; }
 
         public DataTable ThisBuyerRecord { get; set; } = new DataTable();
         public DataTable BuyerRecords { get; set; } = new DataTable();
+
+        public Boolean Create_Buyers_Table(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "CREATE TABLE tblBuyers (";
+                strSQL = strSQL + "cs_buyer_id Bigint NOT NULL IDENTITY, ";
+                strSQL = strSQL + "cs_buyer_bidderno nvarchar(10) NOT NULL, ";
+                strSQL = strSQL + "cs_buyer_unity nvarchar(5) NOT NULL, ";
+                strSQL = strSQL + "cs_buyer_name1 nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "cs_buyer_name2 nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "cs_buyer_address1 nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "cs_buyer_address2 nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "cs_buyer_city nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "cs_buyer_state nvarchar(3) NOT NULL, ";
+                strSQL = strSQL + "cs_buyer_postcode nvarchar(5) NOT NULL, ";
+                strSQL = strSQL + "cs_buyer_telephone nvarchar(15) NOT NULL, ";
+                strSQL = strSQL + "cs_buyer_mobile nvarchar(15) NOT NULL, ";
+                strSQL = strSQL + "cs_buyer_email nvarchar(128) NOT NULL, ";
+                strSQL = strSQL + "cs_buyer_premium float NOT NULL)";
+                SqlCommand cmdCreate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+
+                cmdCreate.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nCreate Buyers Table: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Insert_Buyer(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "INSERT INTO tblBuyers (";
+                strSQL = strSQL + "cs_buyer_bidderno, ";
+                strSQL = strSQL + "cs_buyer_unity, ";
+                strSQL = strSQL + "cs_buyer_name1, ";
+                strSQL = strSQL + "cs_buyer_name2, ";
+                strSQL = strSQL + "cs_buyer_address1, ";
+                strSQL = strSQL + "cs_buyer_address2, ";
+                strSQL = strSQL + "cs_buyer_city, ";
+                strSQL = strSQL + "cs_buyer_state, ";
+                strSQL = strSQL + "cs_buyer_postcode, ";
+                strSQL = strSQL + "cs_buyer_telephone, ";
+                strSQL = strSQL + "cs_buyer_mobile, ";
+                strSQL = strSQL + "cs_buyer_email, ";
+                strSQL = strSQL + "cs_buyer_premium) VALUES (";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(BuyerBidderNumber) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(BuyerUnityCode) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(BuyerName1) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(BuyerName2) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(BuyerAddress1) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(BuyerAddress2) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(BuyerCity) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(BuyerState) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(BuyerPostCode) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(BuyerTelephone) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(BuyerMobile) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(BuyerEmail) + "', ";
+                strSQL = strSQL + BuyerDefaultPremium.ToString() + ")";
+                SqlCommand cmdInsert = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                if (cmdInsert.ExecuteNonQuery() != 1)
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nInsert New Buyer: More than one reocrd would be inserted !";
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nInsert New Buyer: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_Buyer(Int32 buyerId)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            ThisBuyerRecord.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblBuyers WHERE cs_buyer_id = " + buyerId.ToString();
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ThisBuyerRecord.Load(rdrGet);
+                    isSuccessful = Gather_Buyer();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet Buyer: Buyer with Id " + buyerId.ToString() + " not found !";
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Buyer: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_Buyer(String bidderNo)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            ThisBuyerRecord.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblBuyers WHERE cs_buyer_bidderno = '" + bidderNo + "'";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ThisBuyerRecord.Load(rdrGet);
+                    isSuccessful = Gather_Buyer();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet Buyer: Buyer with Bidder No " + bidderNo + " not found !";
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Buyer: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_Buyer(Int32 buyerId, SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            ThisBuyerRecord.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblBuyers WHERE cs_buyer_id = " + buyerId.ToString();
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ThisBuyerRecord.Load(rdrGet);
+                    isSuccessful = Gather_Buyer();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet Buyer: Buyer with Id " + buyerId.ToString() + " not found !";
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Buyer: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_Buyer(String bidderNo, SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            ThisBuyerRecord.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblBuyers WHERE cs_buyer_bidderno = '" + bidderNo + "'";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ThisBuyerRecord.Load(rdrGet);
+                    isSuccessful = Gather_Buyer();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet Buyer: Buyer with Bidder No " + bidderNo + " not found !";
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Buyer: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Gather_Buyer()
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                BuyerId = Convert.ToInt32(ThisBuyerRecord.Rows[0]["cs_buyer_id"]);
+                BuyerBidderNumber = ThisBuyerRecord.Rows[0]["cs_buyer_bidderno"].ToString();
+                BuyerUnityCode = ThisBuyerRecord.Rows[0]["cs_buyer_unity"].ToString();
+                BuyerName1 = ThisBuyerRecord.Rows[0]["cs_buyer_name1"].ToString();
+                BuyerName2 = ThisBuyerRecord.Rows[0]["cs_buyer_name2"].ToString();
+                BuyerAddress1 = ThisBuyerRecord.Rows[0]["cs_buyer_address1"].ToString();
+                BuyerAddress2 = ThisBuyerRecord.Rows[0]["cs_buyer_address2"].ToString();
+                BuyerCity = ThisBuyerRecord.Rows[0]["cs_buyer_city"].ToString();
+                BuyerState = ThisBuyerRecord.Rows[0]["cs_buyer_state"].ToString();
+                BuyerPostCode = ThisBuyerRecord.Rows[0]["cs_buyer_postcode"].ToString();
+                BuyerTelephone = ThisBuyerRecord.Rows[0]["cs_buyer_telephone"].ToString();
+                BuyerMobile = ThisBuyerRecord.Rows[0]["cs_buyer_mobile"].ToString();
+                BuyerEmail = ThisBuyerRecord.Rows[0]["cs_buyer_email"].ToString();
+                BuyerDefaultPremium = Convert.ToDouble(ThisBuyerRecord.Rows[0]["cs_buyer_premium"]);
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGather Buyer: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Update_Buyer(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+            Boolean hasChanged = false;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "UPDATE tblBuyers SET ";
+                if (BuyerBidderNumber != ThisBuyerRecord.Rows[0]["cs_buyer_bidderno"].ToString())
+                {
+                    strSQL = strSQL + "cs_buyer_bidderno = '" + MyFormatting.Hyphon(BuyerBidderNumber) + "', ";
+                    hasChanged = true;
+                }
+                if (BuyerUnityCode != ThisBuyerRecord.Rows[0]["cs_buyer_unity"].ToString())
+                {
+                    strSQL = strSQL + "cs_buyer_unity = '" + MyFormatting.Hyphon(BuyerUnityCode) + "', ";
+                    hasChanged = true;
+                }
+                if (BuyerName1 != ThisBuyerRecord.Rows[0]["cs_buyer_name1"].ToString())
+                {
+                    strSQL = strSQL + "cs_buyer_name1 = '" + MyFormatting.Hyphon(BuyerName1) + "', ";
+                    hasChanged = true;
+                }
+                if (BuyerName2 != ThisBuyerRecord.Rows[0]["cs_buyer_name2"].ToString())
+                {
+                    strSQL = strSQL + "cs_buyer_name2 = '" + MyFormatting.Hyphon(BuyerName2) + "', ";
+                    hasChanged = true;
+                }
+                if (BuyerAddress1 != ThisBuyerRecord.Rows[0]["cs_buyer_address1"].ToString())
+                {
+                    strSQL = strSQL + "cs_buyer_address1 = '" + MyFormatting.Hyphon(BuyerAddress1) + "', ";
+                    hasChanged = true;
+                }
+                if (BuyerAddress2 != ThisBuyerRecord.Rows[0]["cs_buyer_address2"].ToString())
+                {
+                    strSQL = strSQL + "cs_buyer_address2 = '" + MyFormatting.Hyphon(BuyerAddress2) + "', ";
+                    hasChanged = true;
+                }
+                if (BuyerCity != ThisBuyerRecord.Rows[0]["cs_buyer_city"].ToString())
+                {
+                    strSQL = strSQL + "cs_buyer_city = '" + MyFormatting.Hyphon(BuyerCity) + "', ";
+                    hasChanged = true;
+                }
+                if (BuyerState != ThisBuyerRecord.Rows[0]["cs_buyer_state"].ToString())
+                {
+                    strSQL = strSQL + "cs_buyer_state = '" + MyFormatting.Hyphon(BuyerState) + "', ";
+                    hasChanged = true;
+                }
+                if (BuyerPostCode != ThisBuyerRecord.Rows[0]["cs_buyer_postcode"].ToString())
+                {
+                    strSQL = strSQL + "cs_buyer_postcode = '" + MyFormatting.Hyphon(BuyerPostCode) + "', ";
+                    hasChanged = true;
+                }
+                if (BuyerTelephone != ThisBuyerRecord.Rows[0]["cs_buyer_telephone"].ToString())
+                {
+                    strSQL = strSQL + "cs_buyer_telephone = '" + MyFormatting.Hyphon(BuyerTelephone) + "', ";
+                    hasChanged = true;
+                }
+                if (BuyerMobile != ThisBuyerRecord.Rows[0]["cs_buyer_mobile"].ToString())
+                {
+                    strSQL = strSQL + "cs_buyer_mobile = '" + MyFormatting.Hyphon(BuyerMobile) + "', ";
+                    hasChanged = true;
+                }
+                if (BuyerEmail != ThisBuyerRecord.Rows[0]["cs_buyer_email"].ToString())
+                {
+                    strSQL = strSQL + "cs_buyer_email = '" + MyFormatting.Hyphon(BuyerEmail) + "', ";
+                    hasChanged = true;
+                }
+                if (BuyerDefaultPremium != Convert.ToDouble(ThisBuyerRecord.Rows[0]["cs_buyer_premium"]))
+                {
+                    strSQL = strSQL + "cs_buyer_premium = " + BuyerDefaultPremium.ToString() + ", ";
+                    hasChanged = true;
+                }
+
+                if (hasChanged == true)
+                {
+                    strSQL = strSQL.Substring(0, strSQL.Length - 2);
+                    strSQL = strSQL + " WHERE cs_buyer_id = " + BuyerId.ToString();
+                    SqlCommand cmdUpdate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                    if (cmdUpdate.ExecuteNonQuery() != 1)
+                    {
+                        isSuccessful = false;
+                        ErrorMessage = "** Operator **\r\n\r\nUpdate Buyer Record: More than one record would be updated !";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nUpdate Buyer Record: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Can_Delete_Buyer(Int32 buyerId)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "SLECT * FROM tblLots WHERE cs_lot_buyerid = " + buyerId.ToString();
+                SqlCommand cmdGetL = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGetL = cmdGetL.ExecuteReader();
+                if (rdrGetL.HasRows == true)
+                {
+                    isSuccessful = false;
+                    ErrorMessage = ErrorMessage + "There are Auction Lots associated with this Buyer !\r\n";
+                }
+                rdrGetL.Close();
+
+                if (isSuccessful == false)
+                {
+                    ErrorMessage = "** Operator **\r\n\r\nTest if Buyer can be Deleted:\r\n\r\n" + ErrorMessage;
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nTest if Buyer can be Deleted: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Delete_Buyer(SqlTransaction trnEnvelope, Int32 buyerId)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "DELETE FROM tblBuyers WHERE cs_buyer_id = " + buyerId.ToString();
+                SqlCommand cmdDelete = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                if (cmdDelete.ExecuteNonQuery() != 1)
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nDelete Buyer Record: More than one record would be deleted !";
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nDelete Buyer Record: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
 
         #endregion
         #region Lot Table
@@ -1958,16 +2847,188 @@ namespace UNITYCSControlLibrary
         public String LotDescription { get; set; }
         public Double LotQuantity { get; set; }
         public Double LotPrice { get; set; }
+        public Double LotValue { get; set; }
         public String LotGSTCode { get; set; }
-        public Double LotCommissionRate { get; set; }
         public Double LotCommission { get; set; }
         public Int32 LotBuyerid { get; set; }
-        public Double LotPremiumRate { get; set; }
-        public Int32 LotInvoiceId { get; set; }
-        public Int32 LotAccountSaleId { get; set; }
+        public Double LotPremium { get; set; }
+        public Int32 LotInvoiceNumber { get; set; }
+        public Int32 LotAccountSaleNumber { get; set; }
+
         public DataTable ThisLotRecord { get; set; } = new DataTable();
         public DataTable LotRecords { get; set; } = new DataTable();
 
+        public Boolean Create_Lots_Table(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "CREATE TABLE tblLots (";
+                strSQL = strSQL + "cs_lot_id Bigint NOT NULL IDENTITY, ";
+                strSQL = strSQL + "cs_lot_vendorid Bigint NOT NULL, ";
+                strSQL = strSQL + "cs_lot_buyerid Bigint NOT NULL, ";
+                strSQL = strSQL + "cs_lot_catalogueid Bigint NOT NULL, ";
+                strSQL = strSQL + "cs_lot_number nvarchar(10) NOT NULL, ";
+                strSQL = strSQL + "cs_lot_description nvarchar(256) NOT NULL, ";
+                strSQL = strSQL + "cs_lot_quantity float NOT NULL, ";
+                strSQL = strSQL + "cs_lot_price float NOT NULL, ";
+                strSQL = strSQL + "cs_lot_value float NOT NULL, ";
+                strSQL = strSQL + "cs_lot_gstcode char(1) NOT NULL, ";
+                strSQL = strSQL + "cs_lot_commissionrate float NOT NULL, ";
+                strSQL = strSQL + "cs_lot_premiumrate float NOT NULL, ";
+                strSQL = strSQL + "cs_lot_invoiceno Bigint NOT NULL, ";
+                strSQL = strSQL + "cs_lot_accountsaleno Bigint NOT NULL)";
+                SqlCommand cmdCreate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+
+                cmdCreate.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nCreate Lots Table: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Insert_Lot(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "INSERT INTO tblLots (";
+                strSQL = strSQL + "cs_lot_vendorid, ";
+                strSQL = strSQL + "cs_lot_buyerid, ";
+                strSQL = strSQL + "cs_lot_catalogueid, ";
+                strSQL = strSQL + "cs_lot_number, ";
+                strSQL = strSQL + "cs_lot_description, ";
+                strSQL = strSQL + "cs_lot_quantity, ";
+                strSQL = strSQL + "cs_lot_price, ";
+                strSQL = strSQL + "cs_lot_value, ";
+                strSQL = strSQL + "cs_lot_gstcode, ";
+                strSQL = strSQL + "cs_lot_commissionrate, ";
+                strSQL = strSQL + "cs_lot_premiumrate, ";
+                strSQL = strSQL + "cs_lot_invoiceno, ";
+                strSQL = strSQL + "cs_lot_accountsaleno) VALUES (";
+                strSQL = strSQL + LotVendorId.ToString() + ", ";
+                strSQL = strSQL + LotBuyerid.ToString() + ", ";
+                strSQL = strSQL + LotCatalogueId.ToString() + ", ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(LotNumber) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(LotDescription) + "', ";
+                strSQL = strSQL + LotQuantity.ToString() + ", ";
+                strSQL = strSQL + LotPrice.ToString() + ", ";
+                strSQL = strSQL + LotValue.ToString() + ", ";
+                strSQL = strSQL + "'" + LotGSTCode + "', ";
+                strSQL = strSQL + LotCommission.ToString() + ", ";
+                strSQL = strSQL + LotPremium.ToString() + ", ";
+                strSQL = strSQL + LotInvoiceNumber.ToString() + ", ";
+                strSQL = strSQL + LotAccountSaleNumber.ToString() + ")";
+                SqlCommand cmdInsert = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                if (cmdInsert.ExecuteNonQuery() != 1)
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nInsert New Lot: More than one record would be inserted !";
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nInsert New Lot: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_Lot(Int32 lotId)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            ThisLotRecord.Clear();
+
+            try
+            {
+                String strSQL = "SELECT *FROM tblLots WHERE cs_lot_id = " + lotId.ToString();
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ThisLotRecord.Load(rdrGet);
+                    isSuccessful = Gather_Lot();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet Lot by Id : Sale Lot with Id " + lotId.ToString() + " not found !";
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Lot by Id : " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_Lot(Int32 lotId, SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            ThisLotRecord.Clear();
+
+            try
+            {
+                String strSQL = "SELECT *FROM tblLots WHERE cs_lot_id = " + lotId.ToString();
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ThisLotRecord.Load(rdrGet);
+                    isSuccessful = Gather_Lot();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet Lot by Id : Sale Lot with Id " + lotId.ToString() + " not found !";
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Lot by Id : " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+
+        public Boolean Gather_Lot()
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                LotId = Convert.ToInt32(ThisLotRecord.Rows[0]["cs_lot_id"]);
+
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGather Lot: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
         #endregion
     }
 }
