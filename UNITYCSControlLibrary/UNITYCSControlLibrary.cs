@@ -181,7 +181,6 @@ namespace UNITYCSControlLibrary
 
         #region GST Code Table
         public DataTable GSTCodeList { get; set; } = new DataTable();
-        public Int32 GSTCodeId { get; set; }
         public String GSTCode { get; set; }
         public String GSTCodeDescription { get; set; }
         public Double GSTCodeRate { get; set; }
@@ -282,7 +281,6 @@ namespace UNITYCSControlLibrary
 
             try
             {
-                GSTCodeId = Convert.ToInt32(thisGSTCode.Rows[0]["gst_id"]);
                 GSTCode = thisGSTCode.Rows[0]["gst_code"].ToString();
                 GSTCodeDescription = thisGSTCode.Rows[0]["gst_description"].ToString();
                 GSTCodeRate = Convert.ToDouble(thisGSTCode.Rows[0]["gst_rate"]);
@@ -318,7 +316,7 @@ namespace UNITYCSControlLibrary
 
                 if (hasChanged == true)
                 {
-                    strSQL = strSQL.Substring(0, strSQL.Length - 2) + " WHERE gst_id = " + GSTCodeId.ToString();
+                    strSQL = strSQL.Substring(0, strSQL.Length - 2) + " WHERE gst_code = '" + GSTCode + "'";
                     SqlCommand cmdUpdate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
                     if (cmdUpdate.ExecuteNonQuery() != 1)
                     {
@@ -335,7 +333,7 @@ namespace UNITYCSControlLibrary
 
             return isSuccessful;
         }
-        public Boolean Delete_GST_Code(Int32 gstCodeId, SqlTransaction trnEnvelope)
+        public Boolean Delete_GST_Code(String gstCode, SqlTransaction trnEnvelope)
         {
             Boolean isSuccessful = true;
 
@@ -343,7 +341,7 @@ namespace UNITYCSControlLibrary
 
             try
             {
-                String strSQL = "DELETE FROM tblGSTCodes WHERE gst_id = " + gstCodeId.ToString();
+                String strSQL = "DELETE FROM tblGSTCodes WHERE gst_code = '" + gstCode + "'";
                 SqlCommand cmdDelete = new SqlCommand(strSQL, MyConnection, trnEnvelope);
                 if (cmdDelete.ExecuteNonQuery() != 1)
                 {
@@ -390,6 +388,7 @@ namespace UNITYCSControlLibrary
         #region Charges Master Table
 
         public DataTable ChargesList { get; set; } = new DataTable();
+
         public Int32 ChargeId { get; set; }
         public String ChargeDescription { get; set; }
         public String ChargeGSTCode { get; set; }
@@ -405,6 +404,7 @@ namespace UNITYCSControlLibrary
             try
             {
                 String strSQL = "CREATE TABLE tblCharges (";
+                strSQL = strSQL + "charge_id Bigint NOT NULL IDENTITY, ";
                 strSQL = strSQL + "charge_description nvarchar(50) NOT NULL, ";
                 strSQL = strSQL + "charge_gstcode char(1) NOT NULL)";
                 SqlCommand cmdCreate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
@@ -433,7 +433,11 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + "'" + MyFormatting.Hyphon(ChargeDescription) + "', ";
                 strSQL = strSQL + "'" + ChargeGSTCode + "')";
                 SqlCommand cmdInsert = new SqlCommand(strSQL, MyConnection, trnEnvelope);
-                if (cmdInsert.ExecuteNonQuery() != 1)
+                if (cmdInsert.ExecuteNonQuery() == 1)
+                {
+                    isSuccessful = Get_Charge(ChargeDescription, trnEnvelope);
+                }
+                else
                 {
                     isSuccessful = false;
                     ErrorMessage = "** Operator **\r\n\r\nInsert New Charges:\r\n\r\nMore than one record would be Inserted !";
@@ -469,6 +473,7 @@ namespace UNITYCSControlLibrary
                     isSuccessful = false;
                     ErrorMessage = "** Operator **\r\n\r\nGet Charge:\r\n\r\nCharge with Id " + chargeId.ToString() + " not found !";
                 }
+                rdrGet.Close();
             }
             catch (Exception ex)
             {
@@ -500,6 +505,39 @@ namespace UNITYCSControlLibrary
                     isSuccessful = false;
                     ErrorMessage = "** Operator **\r\n\r\nGet Charge:\r\n\r\nCharge with Id " + chargeId.ToString() + " not found !";
                 }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Charge:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_Charge(String chargeDescription, SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblCharges WHERE charge_description = '" + MyFormatting.Hyphon(chargeDescription) + "'";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    thisCharge.Clear();
+                    thisCharge.Load(rdrGet);
+                    isSuccessful = Gather_Charge();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet Charge:\r\n\r\nCharge with Description " + chargeDescription + " not found !";
+                }
+                rdrGet.Close();
             }
             catch (Exception ex)
             {
@@ -593,6 +631,33 @@ namespace UNITYCSControlLibrary
 
             return isSuccessful;
         }
+        public Boolean Get_Charges_List()
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            ChargesList.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblCharges ORDER BY charge_description";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ChargesList.Load(rdrGet);
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Charges List:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
         #endregion
         #region Phrases Table
         public DataTable PhrasesList { get; set; } = new DataTable();
@@ -609,7 +674,9 @@ namespace UNITYCSControlLibrary
 
             try
             {
-                String strSQL = "CREATE TABLE tblPhrases (phrase_description nvarchar(50) NOT NULL)";
+                String strSQL = "CREATE TABLE tblPhrases (";
+                strSQL = strSQL + "phrase_id Bigint NOT NULL IDENTITY, ";
+                strSQL = strSQL + "phrase_description nvarchar(500) NOT NULL)";
                 SqlCommand cmdCreate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
 
                 cmdCreate.ExecuteNonQuery();
@@ -632,7 +699,11 @@ namespace UNITYCSControlLibrary
             {
                 String strSQL = "INSERT INTO tblPhrases (phrase_description) VALUES ('" + MyFormatting.Hyphon(PhraseDescription) + "')";
                 SqlCommand cmdInsert = new SqlCommand(strSQL, MyConnection, trnEnvelope);
-                if (cmdInsert.ExecuteNonQuery() != 1)
+                if (cmdInsert.ExecuteNonQuery() == 1)
+                {
+                    isSuccessful = Get_Phrase(PhraseDescription, trnEnvelope);
+                }
+                else
                 {
                     isSuccessful = false;
                     ErrorMessage = "** Operator **\r\n\r\nInsert New Phrase:\r\n\r\nMore than one record would be inserted !";
@@ -679,6 +750,73 @@ namespace UNITYCSControlLibrary
 
             return isSuccessful;
         }
+        public Boolean Get_Phrase(Int32 phraseId, SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+            thisPhrase.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblPhrases WHERE phrase_id = " + phraseId.ToString();
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    thisPhrase.Load(rdrGet);
+                    isSuccessful = Gather_Phrase();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet Phrase:\r\n\r\nPhrase not found !";
+                }
+                rdrGet.Close();
+                cmdGet.Dispose();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Phrase:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_Phrase(String phraseText, SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+            thisPhrase.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblPhrases WHERE phrase_description = '" + MyFormatting.Hyphon(phraseText) + "'";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    thisPhrase.Load(rdrGet);
+                    isSuccessful = Gather_Phrase();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet Phrase:\r\n\r\nPhrase not found !";
+                }
+                rdrGet.Close();
+                cmdGet.Dispose();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Phrase:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+
         private Boolean Gather_Phrase()
         {
             Boolean isSuccessful = true;
@@ -1002,16 +1140,12 @@ namespace UNITYCSControlLibrary
                 {
                     SalesList.Load(rdrGet);
                 }
-                else
-                {
-                    isSuccessful = false;
-                    ErrorMessage = "** Operator **\r\n\r\nInsert New Sale:\r\n\r\nNo records found !";
-                }
+                rdrGet.Close();
             }
             catch (Exception ex)
             {
                 isSuccessful = false;
-                ErrorMessage = "** Operator **\r\n\r\nInsert New Sale:\r\n\r\n" + ex.Message + " !";
+                ErrorMessage = "** Operator **\r\n\r\nList of Sales:\r\n\r\n" + ex.Message + " !";
             }
 
             return isSuccessful;
