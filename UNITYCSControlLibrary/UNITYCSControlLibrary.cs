@@ -973,7 +973,7 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + "sales_active, ";
                 strSQL = strSQL + "sales_datasource) VALUES (";
                 strSQL = strSQL + "'" + MyFormatting.Hyphon(SaleDescription) + "', ";
-                strSQL = strSQL + "CONVERT(datetime, '" + SaleDate.ToString() + "', 103) ";
+                strSQL = strSQL + "CONVERT(datetime, '" + SaleDate.ToString() + "', 103), ";
                 strSQL = strSQL + "'" + SaleIsActive.ToString() + "', ";
                 strSQL = strSQL + "'" + MyFormatting.Hyphon(SaleDataSource) + "')";
                 SqlCommand cmdInsert = new SqlCommand(strSQL, MyConnection, trnEnvelope);
@@ -981,6 +981,10 @@ namespace UNITYCSControlLibrary
                 {
                     isSuccessful = false;
                     ErrorMessage = "** Operator **\r\n\r\nInsert New Sale:\r\n\r\nMore than one record would be inserted !";
+                }
+                else
+                {
+                    isSuccessful = Get_Sale(SaleDescription, trnEnvelope);
                 }
             }
             catch (Exception ex)
@@ -1012,6 +1016,39 @@ namespace UNITYCSControlLibrary
                 {
                     isSuccessful = false;
                     ErrorMessage = "** Operator **\r\n\r\nGet Sale:\r\n\r\nSale Id not found !";
+                }
+                rdrGet.Close();
+                cmdGet.Dispose();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Sale:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_Sale(String saleName, SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+            ThisSale.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblSales WHERE sales_description = '" + MyFormatting.Hyphon(saleName) + "'";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ThisSale.Load(rdrGet);
+                    isSuccessful = Gather_Sale();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet Sale:\r\n\r\nSale " + saleName + " not found !";
                 }
                 rdrGet.Close();
                 cmdGet.Dispose();
