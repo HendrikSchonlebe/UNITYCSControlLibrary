@@ -1213,6 +1213,11 @@ namespace UNITYCSControlLibrary
         public Double AgentComissionRate3 { get; set; }
         public Double AgentComissionRate4 { get; set; }
         public Double AgentComissionRate5 { get; set; }
+        public Double AgentRebateRate1 { get; set; }
+        public Double AgentRebateRate2 { get; set; }
+        public Double AgentRebateRate3 { get; set; }
+        public Double AgentRebateRate4 { get; set; }
+        public Double AgentRebateRate5 { get; set; }
         public Boolean AgentChargePremium { get; set; }
         public Double AgentPremiumRate1 { get; set; }
         public Double AgentPremiumRate2 { get; set; }
@@ -1269,6 +1274,11 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + "agent_commission3 Float NOT NULL, ";
                 strSQL = strSQL + "agent_commission4 Float NOT NULL, ";
                 strSQL = strSQL + "agent_commission5 Float NOT NULL, ";
+                strSQL = strSQL + "agent_rebate1 Float NOT NULL, ";
+                strSQL = strSQL + "agent_rebate2 Float NOT NULL, ";
+                strSQL = strSQL + "agent_rebate3 Float NOT NULL, ";
+                strSQL = strSQL + "agent_rebate4 Float NOT NULL, ";
+                strSQL = strSQL + "agent_rebate5 Float NOT NULL, ";
                 strSQL = strSQL + "agent_chargepremium bit NOT NULL, ";
                 strSQL = strSQL + "agent_premium1 Float NOT NULL, ";
                 strSQL = strSQL + "agent_premium2 Float NOT NULL, ";
@@ -1327,6 +1337,11 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + "agent_commission3, ";
                 strSQL = strSQL + "agent_commission4, ";
                 strSQL = strSQL + "agent_commission5, ";
+                strSQL = strSQL + "agent_rebate1, ";
+                strSQL = strSQL + "agent_rebate2, ";
+                strSQL = strSQL + "agent_rebate3, ";
+                strSQL = strSQL + "agent_rebate4, ";
+                strSQL = strSQL + "agent_rebate5, ";
                 strSQL = strSQL + "agent_chargepremium, ";
                 strSQL = strSQL + "agent_premium1, ";
                 strSQL = strSQL + "agent_premium2, ";
@@ -1364,6 +1379,11 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + AgentComissionRate3.ToString() + ", ";
                 strSQL = strSQL + AgentComissionRate4.ToString() + ", ";
                 strSQL = strSQL + AgentComissionRate5.ToString() + ", ";
+                strSQL = strSQL + AgentRebateRate1.ToString() + ", ";
+                strSQL = strSQL + AgentRebateRate2.ToString() + ", ";
+                strSQL = strSQL + AgentRebateRate3.ToString() + ", ";
+                strSQL = strSQL + AgentRebateRate4.ToString() + ", ";
+                strSQL = strSQL + AgentRebateRate5.ToString() + ", ";
                 strSQL = strSQL + "'" + AgentChargePremium.ToString() + "', ";
                 strSQL = strSQL + AgentPremiumRate1.ToString() + ", ";
                 strSQL = strSQL + AgentPremiumRate2.ToString() + ", ";
@@ -1457,6 +1477,11 @@ namespace UNITYCSControlLibrary
                 AgentComissionRate3 = Convert.ToDouble(thisAgent.Rows[0]["agent_commission3"]);
                 AgentComissionRate4 = Convert.ToDouble(thisAgent.Rows[0]["agent_commission4"]);
                 AgentComissionRate5 = Convert.ToDouble(thisAgent.Rows[0]["agent_commission5"]);
+                AgentRebateRate1 = Convert.ToDouble(thisAgent.Rows[0]["agent_rebate1"]);
+                AgentRebateRate2 = Convert.ToDouble(thisAgent.Rows[0]["agent_rebate2"]);
+                AgentRebateRate3 = Convert.ToDouble(thisAgent.Rows[0]["agent_rebate3"]);
+                AgentRebateRate4 = Convert.ToDouble(thisAgent.Rows[0]["agent_rebate4"]);
+                AgentRebateRate5 = Convert.ToDouble(thisAgent.Rows[0]["agent_rebate5"]);
                 AgentChargePremium = Convert.ToBoolean(thisAgent.Rows[0]["agent_chargepremium"]);
                 AgentPremiumRate1 = Convert.ToDouble(thisAgent.Rows[0]["agent_premium1"]);
                 AgentPremiumRate2 = Convert.ToDouble(thisAgent.Rows[0]["agent_premium2"]);
@@ -1638,6 +1663,31 @@ namespace UNITYCSControlLibrary
                     strSQL = strSQL + "agent_commission5 = " + AgentComissionRate5.ToString() + ", ";
                     hasChanged = true;
                 }
+                if (AgentRebateRate1 != Convert.ToDouble(thisAgent.Rows[0]["agent_rebate1"]))
+                {
+                    strSQL = strSQL + "agent_rebate1 = " + AgentRebateRate1.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (AgentRebateRate2 != Convert.ToDouble(thisAgent.Rows[0]["agent_rebate2"]))
+                {
+                    strSQL = strSQL + "agent_rebate2 = " + AgentRebateRate2.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (AgentRebateRate3 != Convert.ToDouble(thisAgent.Rows[0]["agent_rebate3"]))
+                {
+                    strSQL = strSQL + "agent_rebate3 = " + AgentRebateRate3.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (AgentRebateRate4 != Convert.ToDouble(thisAgent.Rows[0]["agent_rebate4"]))
+                {
+                    strSQL = strSQL + "agent_rebate4 = " + AgentRebateRate4.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (AgentRebateRate5 != Convert.ToDouble(thisAgent.Rows[0]["agent_rebate5"]))
+                {
+                    strSQL = strSQL + "agent_rebate5 = " + AgentRebateRate5.ToString() + ", ";
+                    hasChanged = true;
+                }
                 if (AgentChargePremium != Convert.ToBoolean(thisAgent.Rows[0]["agent_chargepremium"]))
                 {
                     strSQL = strSQL + "agent_chargepremium = '" + AgentChargePremium.ToString() + "', ";
@@ -1700,6 +1750,11 @@ namespace UNITYCSControlLibrary
         public Double CommissionRate3 { get; set; }
         public Double CommissionRate4 { get; set; }
         public Double CommissionRate5 { get; set; }
+        public Double RebateRate1 { get; set; }
+        public Double RebateRate2 { get; set; }
+        public Double RebateRate3 { get; set; }
+        public Double RebateRate4 { get; set; }
+        public Double RebateRate5 { get; set; }
         public Boolean ChargePremium { get; set; }
         public Double PremiumRate1 { get; set; }
         public Double PremiumRate2 { get; set; }
@@ -1724,6 +1779,11 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + "cs_ctrl_commission3 Float NOT NULL, ";
                 strSQL = strSQL + "cs_ctrl_commission4 Float NOT NULL, ";
                 strSQL = strSQL + "cs_ctrl_commission5 Float NOT NULL, ";
+                strSQL = strSQL + "cs_ctrl_rebate1 Float NOT NULL, ";
+                strSQL = strSQL + "cs_ctrl_rebate2 Float NOT NULL, ";
+                strSQL = strSQL + "cs_ctrl_rebate3 Float NOT NULL, ";
+                strSQL = strSQL + "cs_ctrl_rebate4 Float NOT NULL, ";
+                strSQL = strSQL + "cs_ctrl_rebate5 Float NOT NULL, ";
                 strSQL = strSQL + "cs_ctrl_chargepremium bit NOT NULL, ";
                 strSQL = strSQL + "cs_ctrl_premium1 Float NOT NULL, ";
                 strSQL = strSQL + "cs_ctrl_premium2 Float NOT NULL, ";
@@ -1743,6 +1803,11 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + "cs_ctrl_commission3, ";
                 strSQL = strSQL + "cs_ctrl_commission4, ";
                 strSQL = strSQL + "cs_ctrl_commission5, ";
+                strSQL = strSQL + "cs_ctrl_rebate1, ";
+                strSQL = strSQL + "cs_ctrl_rebate2, ";
+                strSQL = strSQL + "cs_ctrl_rebate3, ";
+                strSQL = strSQL + "cs_ctrl_rebate4, ";
+                strSQL = strSQL + "cs_ctrl_rebate5, ";
                 strSQL = strSQL + "cs_ctrl_chargepremium, ";
                 strSQL = strSQL + "cs_ctrl_premium1, ";
                 strSQL = strSQL + "cs_ctrl_premium2, ";
@@ -1752,6 +1817,11 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + "cs_ctrl_next_inv, ";
                 strSQL = strSQL + "cs_ctrl_next_acs) VALUES (";
                 strSQL = strSQL + "'False', ";
+                strSQL = strSQL + "0.00, ";
+                strSQL = strSQL + "0.00, ";
+                strSQL = strSQL + "0.00, ";
+                strSQL = strSQL + "0.00, ";
+                strSQL = strSQL + "0.00, ";
                 strSQL = strSQL + "0.00, ";
                 strSQL = strSQL + "0.00, ";
                 strSQL = strSQL + "0.00, ";
@@ -1852,6 +1922,11 @@ namespace UNITYCSControlLibrary
                 CommissionRate3 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Commission3"]);
                 CommissionRate4 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Commission4"]);
                 CommissionRate5 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Commission5"]);
+                RebateRate1 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_rebate1"]);
+                RebateRate2 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_rebate2"]);
+                RebateRate3 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_rebate3"]);
+                RebateRate4 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_rebate4"]);
+                RebateRate5 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_rebate5"]);
                 ChargePremium = Convert.ToBoolean(ThisControlRecord.Rows[0]["cs_ctrl_chargepremium"]);
                 PremiumRate1 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Premium1"]);
                 PremiumRate2 = Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_Premium2"]);
@@ -1910,6 +1985,31 @@ namespace UNITYCSControlLibrary
                     strSQL = strSQL + "cs_ctrl_commission5 = " + CommissionRate1.ToString() + ", ";
                     hasChanged = true;
                 }
+                if (RebateRate1 != Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_rebate1"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_rebate1 = " + RebateRate1.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (RebateRate2 != Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_rebate2"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_rebate2 = " + RebateRate2.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (RebateRate3 != Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_rebate3"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_rebate3 = " + RebateRate3.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (RebateRate4 != Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_rebate4"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_rebate4 = " + RebateRate4.ToString() + ", ";
+                    hasChanged = true;
+                }
+                if (RebateRate5 != Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_rebate5"]))
+                {
+                    strSQL = strSQL + "cs_ctrl_rebate5 = " + RebateRate5.ToString() + ", ";
+                    hasChanged = true;
+                }
                 if (ChargePremium != Convert.ToBoolean(ThisControlRecord.Rows[0]["cs_ctrl_chargepremium"]))
                 {
                     strSQL = strSQL + "cs_ctrl_chargepremium = '" + ChargePremium.ToString() + "', ";
@@ -1940,14 +2040,14 @@ namespace UNITYCSControlLibrary
                     strSQL = strSQL + "cs_ctrl_Premium5 = " + PremiumRate1.ToString() + ", ";
                     hasChanged = true;
                 }
-                if (NextInvoiceNumber != Convert.ToInt32(ThisControlRecord.Rows[0]["cs_ctrl_nextinv"]))
+                if (NextInvoiceNumber != Convert.ToInt32(ThisControlRecord.Rows[0]["cs_ctrl_next_inv"]))
                 {
-                    strSQL = strSQL + "cs_ctrl_nextinv = " + NextInvoiceNumber.ToString() + ", ";
+                    strSQL = strSQL + "cs_ctrl_next_inv = " + NextInvoiceNumber.ToString() + ", ";
                     hasChanged = true;
                 }
-                if (NextAccountSaleNumber != Convert.ToInt32(ThisControlRecord.Rows[0]["cs_ctrl_nextacs"]))
+                if (NextAccountSaleNumber != Convert.ToInt32(ThisControlRecord.Rows[0]["cs_ctrl_next_acs"]))
                 {
-                    strSQL = strSQL + "cs_ctrl_nextacs = " + NextAccountSaleNumber.ToString() + ", ";
+                    strSQL = strSQL + "cs_ctrl_next_acs = " + NextAccountSaleNumber.ToString() + ", ";
                     hasChanged = true;
                 }
 
@@ -2217,9 +2317,40 @@ namespace UNITYCSControlLibrary
 
             return isSuccessful;
         }
+        public Boolean Get_Catalogue_Records(Int32 vendorId)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+            CatalogueRecords.Clear();
+
+            try
+            {
+                String strSQL = "SELECT tblCatalogue.*, tblVendors.* FROM tblCatalogue ";
+                strSQL = strSQL + "INNER JOIN tblVendors ON tblCatalogue.cs_cat_vendorid = tblVendors.cs_vendor_id ";
+                if (vendorId > 0)
+                    strSQL = strSQL + "WHERE tblCatalogue.cs_cat_vendorid = " + vendorId.ToString() + " ";
+                strSQL = strSQL + "ORDER BY tblCatalogue.cs_cat_code";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    CatalogueRecords.Load(rdrGet);
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Records: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
         #endregion
         #region Vendor Table
         public Int32 VendorId { get; set; }
+        public String VendorGUID { get; set; }
         public String VendorUnityCode { get; set; }
         public String VendorName1 { get; set; }
         public String VendorName2 { get; set; }
@@ -2247,6 +2378,7 @@ namespace UNITYCSControlLibrary
             {
                 String strSQL = "CREATE TABLE tblVendors (";
                 strSQL = strSQL + "cs_vendor_id Bigint NOT NULL IDENTITY, ";
+                strSQL = strSQL + "cs_vendor_guid nvarchar(36) NOT NULL, ";
                 strSQL = strSQL + "cs_vendor_unity nvarchar(5) NOT NULL, ";
                 strSQL = strSQL + "cs_vendor_name1 nvarchar(50) NOT NULL, ";
                 strSQL = strSQL + "cs_vendor_name2 nvarchar(50) NOT NULL, ";
@@ -2282,6 +2414,7 @@ namespace UNITYCSControlLibrary
             try
             {
                 String strSQL = "INSERT INTO tblVendors (";
+                strSQL = strSQL + "cs_vendor_guid, ";
                 strSQL = strSQL + "cs_vendor_unity, ";
                 strSQL = strSQL + "cs_vendor_name1, ";
                 strSQL = strSQL + "cs_vendor_name2, ";
@@ -2296,6 +2429,7 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + "cs_vendor_abn, ";
                 strSQL = strSQL + "cs_vendor_gststatus, ";
                 strSQL = strSQL + "cs_vendor_commissionrate) VALUES (";
+                strSQL = strSQL + "'" + VendorGUID + "', ";
                 strSQL = strSQL + "'" + MyFormatting.Hyphon(VendorUnityCode.ToString()) + "', ";
                 strSQL = strSQL + "'" + MyFormatting.Hyphon(VendorName1) + "', ";
                 strSQL = strSQL + "'" + MyFormatting.Hyphon(VendorName2) + "', ";
@@ -2315,6 +2449,10 @@ namespace UNITYCSControlLibrary
                 {
                     isSuccessful = false;
                     ErrorMessage = "** Operator **\r\n\r\nInsert Vendor Record: More than one record would be inserted !";
+                }
+                else
+                {
+                    isSuccessful = Get_Vendor(VendorGUID, trnEnvelope);
                 }
             }
             catch (Exception ex)
@@ -2391,6 +2529,39 @@ namespace UNITYCSControlLibrary
 
             return isSuccessful;
         }
+        public Boolean Get_Vendor(String thisVendor, SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                ThisVendorRecord.Clear();
+
+                String strSQL = "SELECT * FROM tblVendors WHERE cs_vendor_guid = '" + thisVendor + "'";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ThisVendorRecord.Load(rdrGet);
+                    isSuccessful = Gather_Vendor();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet Vendor Record: Vendor " + thisVendor + " not found !";
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Vendor Record: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
         public Boolean Gather_Vendor()
         {
             Boolean isSuccessful = true;
@@ -2400,6 +2571,7 @@ namespace UNITYCSControlLibrary
             try
             {
                 VendorId = Convert.ToInt32(ThisVendorRecord.Rows[0]["cs_vendor_id"]);
+                VendorGUID = ThisVendorRecord.Rows[0]["cs_vendor_guid"].ToString();
                 VendorUnityCode = ThisVendorRecord.Rows[0]["cs_vendor_unity"].ToString();
                 VendorName1 = ThisVendorRecord.Rows[0]["cs_vendor_name1"].ToString();
                 VendorName2 = ThisVendorRecord.Rows[0]["cs_vendor_name2"].ToString();
@@ -2542,7 +2714,7 @@ namespace UNITYCSControlLibrary
                 }
                 rdrGetC.Close();
 
-                strSQL = "SLECT * FROM tblLots WHERE cs_lot_vendorid = " + vendorId.ToString();
+                strSQL = "SELECT * FROM tblLots WHERE cs_lot_vendorid = " + vendorId.ToString();
                 SqlCommand cmdGetL = new SqlCommand(strSQL, MyConnection);
                 SqlDataReader rdrGetL = cmdGetL.ExecuteReader();
                 if (rdrGetL.HasRows == true)
@@ -2585,6 +2757,58 @@ namespace UNITYCSControlLibrary
             {
                 isSuccessful = false;
                 ErrorMessage = "** Operator **\r\n\r\nDelete Vendor Record: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Int32 Vendors_In_Sale()
+        {
+            Int32 vendorCount = 0;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblVendors";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    DataTable myVendors = new DataTable();
+                    myVendors.Load(rdrGet);
+                    vendorCount = myVendors.Rows.Count;
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "** Operator **\r\n\r\nGet Vendor Count: " + ex.Message + " !";
+            }
+
+            return vendorCount;
+        }
+        public Boolean Get_List_Of_Vendors()
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+            VendorRecords.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblVendors ORDER BY cs_vendor_name1";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    VendorRecords.Load(rdrGet);
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet List of Vendors: " + ex.Message + " !";
             }
 
             return isSuccessful;
