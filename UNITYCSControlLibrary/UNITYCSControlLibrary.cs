@@ -2281,7 +2281,7 @@ namespace UNITYCSControlLibrary
                     strSQL = strSQL + "cs_cat_code = '" + MyFormatting.Hyphon(CatalogueCode) + "', ";
                     hasChanged = true;
                 }
-                if (CatalogueDescription !=  ThisCatalogueRecord.Rows[0]["cs_cat_decription"].ToString())
+                if (CatalogueDescription !=  ThisCatalogueRecord.Rows[0]["cs_cat_description"].ToString())
                 {
                     strSQL = strSQL + "cs_cat_description = '" + MyFormatting.Hyphon(CatalogueDescription) + "', ";
                     hasChanged = true;
@@ -2313,6 +2313,30 @@ namespace UNITYCSControlLibrary
             {
                 isSuccessful = false;
                 ErrorMessage = "** Operator **\r\n\r\nUpdate Catalogue Record: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Delete_Catalogue_Record(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "DELETE FROM tblCatalogue WHERE cs_cat_id = " + CatalogueId.ToString();
+                SqlCommand cmdDelete = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                if (cmdDelete.ExecuteNonQuery() != 1)
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nDelete Catalogue Record: More than one Catalogue record would be deleted !";
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nDelete Catalogue Record: " + ex.Message + " !";
             }
 
             return isSuccessful;
@@ -2829,7 +2853,7 @@ namespace UNITYCSControlLibrary
         public String BuyerMobile { get; set; }
         public String BuyerEmail { get; set; }
         public Double BuyerDefaultPremium { get; set; }
-
+        public Double BuyerDefaultRebate { get; set; }
         public DataTable ThisBuyerRecord { get; set; } = new DataTable();
         public DataTable BuyerRecords { get; set; } = new DataTable();
 
@@ -2855,6 +2879,7 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + "cs_buyer_telephone nvarchar(15) NOT NULL, ";
                 strSQL = strSQL + "cs_buyer_mobile nvarchar(15) NOT NULL, ";
                 strSQL = strSQL + "cs_buyer_email nvarchar(128) NOT NULL, ";
+                strSQL = strSQL + "cs_buyer_rebate float NOT NULL, ";
                 strSQL = strSQL + "cs_buyer_premium float NOT NULL)";
                 SqlCommand cmdCreate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
 
@@ -2889,6 +2914,7 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + "cs_buyer_telephone, ";
                 strSQL = strSQL + "cs_buyer_mobile, ";
                 strSQL = strSQL + "cs_buyer_email, ";
+                strSQL = strSQL + "cs_buyer_rebate, ";
                 strSQL = strSQL + "cs_buyer_premium) VALUES (";
                 strSQL = strSQL + "'" + MyFormatting.Hyphon(BuyerBidderNumber) + "', ";
                 strSQL = strSQL + "'" + MyFormatting.Hyphon(BuyerUnityCode) + "', ";
@@ -2902,12 +2928,17 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + "'" + MyFormatting.Hyphon(BuyerTelephone) + "', ";
                 strSQL = strSQL + "'" + MyFormatting.Hyphon(BuyerMobile) + "', ";
                 strSQL = strSQL + "'" + MyFormatting.Hyphon(BuyerEmail) + "', ";
+                strSQL = strSQL + BuyerDefaultRebate.ToString() + ", ";
                 strSQL = strSQL + BuyerDefaultPremium.ToString() + ")";
                 SqlCommand cmdInsert = new SqlCommand(strSQL, MyConnection, trnEnvelope);
                 if (cmdInsert.ExecuteNonQuery() != 1)
                 {
                     isSuccessful = false;
                     ErrorMessage = "** Operator **\r\n\r\nInsert New Buyer: More than one reocrd would be inserted !";
+                }
+                else
+                {
+                    isSuccessful = Get_Buyer(BuyerBidderNumber, trnEnvelope);
                 }
             }
             catch (Exception ex)
@@ -2917,6 +2948,31 @@ namespace UNITYCSControlLibrary
             }
 
             return isSuccessful;
+        }
+        public Boolean Is_Duplicate_BidderNo(String bidderNo, Int32 buyerId)
+        {
+            Boolean isDuplicate = false;
+            DataTable myBuyer = new DataTable();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblBuyers WHERE cs_buyer_bidderno = '" + MyFormatting.Hyphon(bidderNo) + "'";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    myBuyer.Load(rdrGet);
+                    if (Convert.ToInt32(myBuyer.Rows[0]["cs_buyer_id"]) != buyerId)
+                        isDuplicate = true;
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "** Operator **\r\n\r\nBidder Number Duplication Test: " + ex.Message + " !";
+            }
+
+            return isDuplicate;
         }
         public Boolean Get_Buyer(Int32 buyerId)
         {
@@ -3071,6 +3127,7 @@ namespace UNITYCSControlLibrary
                 BuyerTelephone = ThisBuyerRecord.Rows[0]["cs_buyer_telephone"].ToString();
                 BuyerMobile = ThisBuyerRecord.Rows[0]["cs_buyer_mobile"].ToString();
                 BuyerEmail = ThisBuyerRecord.Rows[0]["cs_buyer_email"].ToString();
+                BuyerDefaultRebate = Convert.ToDouble(ThisBuyerRecord.Rows[0]["cs_buyer_rebate"]);
                 BuyerDefaultPremium = Convert.ToDouble(ThisBuyerRecord.Rows[0]["cs_buyer_premium"]);
             }
             catch (Exception ex)
@@ -3149,6 +3206,11 @@ namespace UNITYCSControlLibrary
                 if (BuyerEmail != ThisBuyerRecord.Rows[0]["cs_buyer_email"].ToString())
                 {
                     strSQL = strSQL + "cs_buyer_email = '" + MyFormatting.Hyphon(BuyerEmail) + "', ";
+                    hasChanged = true;
+                }
+                if (BuyerDefaultRebate != Convert.ToDouble(ThisBuyerRecord.Rows[0]["cs_buyer_rebate"]))
+                {
+                    strSQL = strSQL + "cs_buyer_rebate = " + BuyerDefaultRebate.ToString() + ", ";
                     hasChanged = true;
                 }
                 if (BuyerDefaultPremium != Convert.ToDouble(ThisBuyerRecord.Rows[0]["cs_buyer_premium"]))
@@ -3232,7 +3294,32 @@ namespace UNITYCSControlLibrary
 
             return isSuccessful;
         }
+        public Boolean Get_List_Of_Buyers()
+        {
+            Boolean isSuccessful = true;
 
+            ErrorMessage = string.Empty;
+            BuyerRecords.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblBuyers ORDER BY cs_buyer_name1";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    BuyerRecords.Load(rdrGet);
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet List of Buyers: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
         #endregion
         #region Lot Table
         public Int32 LotId { get; set; }
@@ -3246,6 +3333,7 @@ namespace UNITYCSControlLibrary
         public String LotGSTCode { get; set; }
         public Double LotCommission { get; set; }
         public Int32 LotBuyerid { get; set; }
+        public Double LotRebate { get; set; }
         public Double LotPremium { get; set; }
         public Int32 LotInvoiceNumber { get; set; }
         public Int32 LotAccountSaleNumber { get; set; }
@@ -3273,6 +3361,7 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + "cs_lot_value float NOT NULL, ";
                 strSQL = strSQL + "cs_lot_gstcode char(1) NOT NULL, ";
                 strSQL = strSQL + "cs_lot_commissionrate float NOT NULL, ";
+                strSQL = strSQL + "cs_lot_rebaterate float NOT NULL, ";
                 strSQL = strSQL + "cs_lot_premiumrate float NOT NULL, ";
                 strSQL = strSQL + "cs_lot_invoiceno Bigint NOT NULL, ";
                 strSQL = strSQL + "cs_lot_accountsaleno Bigint NOT NULL)";
@@ -3307,6 +3396,7 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + "cs_lot_value, ";
                 strSQL = strSQL + "cs_lot_gstcode, ";
                 strSQL = strSQL + "cs_lot_commissionrate, ";
+                strSQL = strSQL + "cs_lot_rebaterate, ";
                 strSQL = strSQL + "cs_lot_premiumrate, ";
                 strSQL = strSQL + "cs_lot_invoiceno, ";
                 strSQL = strSQL + "cs_lot_accountsaleno) VALUES (";
@@ -3320,6 +3410,7 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + LotValue.ToString() + ", ";
                 strSQL = strSQL + "'" + LotGSTCode + "', ";
                 strSQL = strSQL + LotCommission.ToString() + ", ";
+                strSQL = strSQL + LotRebate.ToString() + ", ";
                 strSQL = strSQL + LotPremium.ToString() + ", ";
                 strSQL = strSQL + LotInvoiceNumber.ToString() + ", ";
                 strSQL = strSQL + LotAccountSaleNumber.ToString() + ")";
@@ -3413,13 +3504,60 @@ namespace UNITYCSControlLibrary
 
             try
             {
+                LotAccountSaleNumber = Convert.ToInt32(ThisLotRecord.Rows[0]["cs_lot_accountsaleno"]);
+                LotBuyerid = Convert.ToInt32(ThisLotRecord.Rows[0]["cs_lot_buyerid"]);
+                LotCatalogueId = Convert.ToInt32(ThisLotRecord.Rows[0]["cs_lot_catalogueid"]);
+                LotCommission = Convert.ToDouble(ThisLotRecord.Rows[0]["cs_lot_commissionrate"]);
+                LotDescription = ThisLotRecord.Rows[0]["cs_lot_description"].ToString();
+                LotGSTCode = ThisLotRecord.Rows[0]["cs_lot_gstcode"].ToString();
                 LotId = Convert.ToInt32(ThisLotRecord.Rows[0]["cs_lot_id"]);
-
+                LotInvoiceNumber = Convert.ToInt32(ThisLotRecord.Rows[0]["cs_lot_invoiceno"]);
+                LotNumber = ThisLotRecord.Rows[0]["cs_lot_number"].ToString();
+                LotPremium = Convert.ToDouble(ThisLotRecord.Rows[0]["cs_lot_premiumrate"]);
+                LotPrice = Convert.ToDouble(ThisLotRecord.Rows[0]["cs_lot_price"]);
+                LotQuantity = Convert.ToDouble(ThisLotRecord.Rows[0]["cs_lot_quantity"]);
+                LotRebate = Convert.ToDouble(ThisLotRecord.Rows[0]["cs_lot_rebaterate"]);
+                LotValue = Convert.ToDouble(ThisLotRecord.Rows[0]["cs_lot_value"]);
+                LotVendorId = Convert.ToInt32(ThisLotRecord.Rows[0]["cs_lot_vendorid"]);
             }
             catch (Exception ex)
             {
                 isSuccessful = false;
                 ErrorMessage = "** Operator **\r\n\r\nGather Lot: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_List_Of_Lots(String myOrder)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+            LotRecords.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblLots ";
+                strSQL = strSQL + "INNER JOIN tblVendors ON tblLots.cs_lot_vendorid = tblVendors.cs_vendor_id ";
+                strSQL = strSQL + "INNER JOIN tblBuyers ON tblLots.cs_lot_buyerid = tblBuyers.cs_buyer_id ";
+                if (myOrder == "B")
+                    strSQL = strSQL + "ORDER BY tblBuyers.cs_buyer_bidderno, tblLots.cs_lot_number";
+                else if (myOrder == "V")
+                    strSQL = strSQL + "ORDER BY tblVendors.cs_vendor_id, tblLots.cs_lot_number";
+                else
+                    strSQL = strSQL + "ORDER BY tblLots.cs_lot_number";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    LotRecords.Load(rdrGet);
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet List of Lots: " + ex.Message + " !";
             }
 
             return isSuccessful;
