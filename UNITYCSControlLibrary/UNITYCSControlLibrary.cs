@@ -388,6 +388,7 @@ namespace UNITYCSControlLibrary
         #region Charges Master Table
 
         public DataTable ChargesList { get; set; } = new DataTable();
+        public DataTable ChargesListWithGST { get; set; } = new DataTable();
 
         public Int32 ChargeId { get; set; }
         public String ChargeDescription { get; set; }
@@ -654,6 +655,33 @@ namespace UNITYCSControlLibrary
             {
                 isSuccessful = false;
                 ErrorMessage = "** Operator **\r\n\r\nGet Charges List:\r\n\r\n" + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_Charges_List_With_GST()
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            ChargesListWithGST.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblCharges INNER JOIN tblGSTCodes ON tblGSTCodes.gst_code = tblCharges.charge_gstcode ORDER BY tblCharges.charge_description";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ChargesListWithGST.Load(rdrGet);
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Charges List with GST:\r\n\r\n" + ex.Message + " !";
             }
 
             return isSuccessful;
@@ -1228,6 +1256,7 @@ namespace UNITYCSControlLibrary
         public String AgentInvoiceDocument { get; set; }
         public String AgentAccountSaleDocument { get; set; }
         public Boolean AgentUnityAccess { get; set; }
+        public String AgentUnityServerName { get; set; }
         public String AgentUnityDBName { get; set; }
         public String AgentUnitysaName { get; set; }
         public String AgentUnitysapwd { get; set; }
@@ -1266,6 +1295,7 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + "agent_invoice nvarchar(50) NOT NULL, ";
                 strSQL = strSQL + "agent_accountsale nvarchar(50) NOT NULL, ";
                 strSQL = strSQL + "agent_unityaccess bit NOT NULL, ";
+                strSQL = strSQL + "agent_unityserver nvarchar(30) NOT NULL, ";
                 strSQL = strSQL + "agent_unitydbname nvarchar(15) NOT NULL, ";
                 strSQL = strSQL + "agent_unitysaname nvarchar(15) NOT NULL, ";
                 strSQL = strSQL + "agent_unitysapwd nvarchar(15) NOT NULL, ";
@@ -1329,6 +1359,7 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + "agent_invoice, ";
                 strSQL = strSQL + "agent_accountsale, ";
                 strSQL = strSQL + "agent_unityaccess, ";
+                strSQL = strSQL + "agent_unityserver, ";
                 strSQL = strSQL + "agent_unitydbname, ";
                 strSQL = strSQL + "agent_unitysaname, ";
                 strSQL = strSQL + "agent_unitysapwd, ";
@@ -1371,6 +1402,7 @@ namespace UNITYCSControlLibrary
                 strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentInvoiceDocument) + "', ";
                 strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentAccountSaleDocument) + "', ";
                 strSQL = strSQL + "'" + AgentUnityAccess.ToString() + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentUnityServerName) + "', ";
                 strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentUnityDBName) + "', ";
                 strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentUnitysaName) + "', ";
                 strSQL = strSQL + "'" + MyFormatting.Hyphon(AgentUnitysapwd) + "', ";
@@ -1469,6 +1501,7 @@ namespace UNITYCSControlLibrary
                 AgentInvoiceDocument = thisAgent.Rows[0]["agent_invoice"].ToString();
                 AgentAccountSaleDocument = thisAgent.Rows[0]["agent_accountsale"].ToString();
                 AgentUnityAccess = Convert.ToBoolean(thisAgent.Rows[0]["agent_unityaccess"]);
+                AgentUnityServerName = thisAgent.Rows[0]["agent_unityserver"].ToString();
                 AgentUnityDBName = thisAgent.Rows[0]["agent_unitydbname"].ToString();
                 AgentUnitysaName = thisAgent.Rows[0]["agent_unitysaname"].ToString();
                 AgentUnitysapwd = thisAgent.Rows[0]["agent_unitysapwd"].ToString();
@@ -1621,6 +1654,11 @@ namespace UNITYCSControlLibrary
                 if (AgentUnityAccess != Convert.ToBoolean(thisAgent.Rows[0]["agent_unityaccess"]))
                 {
                     strSQL = strSQL + "agent_unityaccess = '" + AgentUnityAccess.ToString() + "', ";
+                    hasChanged = true;
+                }
+                if (AgentUnityServerName != thisAgent.Rows[0]["agent_unityserver"].ToString())
+                {
+                    strSQL = strSQL + "agent_unityserver = '" + MyFormatting.Hyphon(AgentUnityServerName) + "', ";
                     hasChanged = true;
                 }
                 if (AgentUnityDBName != thisAgent.Rows[0]["agent_unitydbname"].ToString())
@@ -1982,7 +2020,7 @@ namespace UNITYCSControlLibrary
                 }
                 if (CommissionRate5 != Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_commission5"]))
                 {
-                    strSQL = strSQL + "cs_ctrl_commission5 = " + CommissionRate1.ToString() + ", ";
+                    strSQL = strSQL + "cs_ctrl_commission5 = " + CommissionRate5.ToString() + ", ";
                     hasChanged = true;
                 }
                 if (RebateRate1 != Convert.ToDouble(ThisControlRecord.Rows[0]["cs_ctrl_rebate1"]))
@@ -2129,6 +2167,10 @@ namespace UNITYCSControlLibrary
                     isSuccessful = false;
                     ErrorMessage = "** Operator **\r\n\r\nInsert Catalogue Record: More than one record would be inserted !";
                 }
+                else
+                {
+                    isSuccessful = Get_Catalogue_Record(CatalogueCode, trnEnvelope);
+                }
             }
             catch (Exception ex)
             {
@@ -2215,6 +2257,39 @@ namespace UNITYCSControlLibrary
             {
                 String strSQL = "SELECT * FROM tblCatalogue WHERE cs_cat_code = '" + catCode + "'";
                 SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ThisCatalogueRecord.Load(rdrGet);
+                    isSuccessful = Gather_Catalogue_Record();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record: Catalogue Record with Code " + catCode + " not found !";
+                }
+                rdrGet.Close();
+                cmdGet.Dispose();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet Catalogue Record: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_Catalogue_Record(String catCode, SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+            ThisCatalogueRecord.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblCatalogue WHERE cs_cat_code = '" + catCode + "'";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection, trnEnvelope);
                 SqlDataReader rdrGet = cmdGet.ExecuteReader();
                 if (rdrGet.HasRows == true)
                 {
@@ -3247,7 +3322,7 @@ namespace UNITYCSControlLibrary
 
             try
             {
-                String strSQL = "SLECT * FROM tblLots WHERE cs_lot_buyerid = " + buyerId.ToString();
+                String strSQL = "SELECT * FROM tblLots WHERE cs_lot_buyerid = " + buyerId.ToString();
                 SqlCommand cmdGetL = new SqlCommand(strSQL, MyConnection);
                 SqlDataReader rdrGetL = cmdGetL.ExecuteReader();
                 if (rdrGetL.HasRows == true)
@@ -3293,6 +3368,31 @@ namespace UNITYCSControlLibrary
             }
 
             return isSuccessful;
+        }
+        public Int32 Buyers_In_Sale()
+        {
+            Int32 buyerCount = 0;
+            DataTable myBuyers = new DataTable();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblBuyers ORDER BY cs_buyer_name1";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    myBuyers.Load(rdrGet);
+                    buyerCount = myBuyers.Rows.Count;
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                buyerCount = -1;
+                ErrorMessage = "** Operator **\r\n\r\nNumber of Buyers in Sale: " + ex.Message + " !";
+            }
+
+            return buyerCount;
         }
         public Boolean Get_List_Of_Buyers()
         {
@@ -3528,6 +3628,43 @@ namespace UNITYCSControlLibrary
 
             return isSuccessful;
         }
+        public Boolean Delete_Lot(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "DELETE FROM tblLots WHERE cs_lot_id = " + LotId.ToString();
+                SqlCommand cmdDelete = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                if (cmdDelete.ExecuteNonQuery() != 1)
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nDelete Lot: More than one record would be deleted !";
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nDelete Lot: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Int32 Get_Lot_Count()
+        {
+            Int32 lotCount = 0; ;
+
+            ErrorMessage = string.Empty;
+
+            if (Get_List_Of_Lots("") == true)
+            {
+                lotCount = LotRecords.Rows.Count;
+            }
+
+            return lotCount;
+        }
         public Boolean Get_List_Of_Lots(String myOrder)
         {
             Boolean isSuccessful = true;
@@ -3561,6 +3698,300 @@ namespace UNITYCSControlLibrary
             }
 
             return isSuccessful;
+        }
+        #endregion
+        #region UNITYClients
+        public Int32 UNITYId { get; set; }
+        public String UNITYShortName { get; set; }
+        public String UNITYName1 { get; set; }
+        public String UNITYName2 { get; set; }
+        public String UNITYProperty { get; set; }
+        public String UNITYStreet { get; set; }
+        public String UNITYCity { get; set; }
+        public String UNITYState { get; set; }
+        public String UNITYPostCode { get; set; }
+        public String UNITYTelephone { get; set; }
+        public String UNITYFax { get; set; }
+        public String UNITYMobile { get; set; }
+        public String UNITYEmail { get; set; }
+        public String UNITYPIC { get; set; }
+        public String UNITYABN { get; set; }
+        public Boolean UNITYGSTStatus { get; set; }
+        public String UNITYMailingStreet { get; set; }
+        public String UNITYMailingCity { get; set; }
+        public String UNITYMailingState { get; set; }
+        public String UNITYMailingPostCode { get; set; }
+        public DataTable ThisUNITYClient { get; set; } = new DataTable();
+        public DataTable UNITYClients { get; set; } = new DataTable();
+
+        public Boolean UNITY_Client_Table_Exists()
+        {
+            Boolean tableExists = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblUNITYClients";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                tableExists = false;
+                ErrorMessage = ex.Message;
+            }
+
+            return tableExists;
+        }
+        public Boolean Create_UNITY_Client_Table(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "CREATE TABLE tblUNITYClients (";
+                strSQL = strSQL + "cs_unity_id Bigint NOT NULL IDENTITY, ";
+                strSQL = strSQL + "cs_unity_sname nvarchar(5) NOT NULL, ";
+                strSQL = strSQL + "cs_unity_name1 nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "cs_unity_name2 nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "cs_unity_property nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "cs_unity_street nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "cs_unity_city nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "cs_unity_state nvarchar(3) NOT NULL, ";
+                strSQL = strSQL + "cs_unity_postcode nvarchar(5) NOT NULL, ";
+                strSQL = strSQL + "cs_unity_phone nvarchar(15) NOT NULL, ";
+                strSQL = strSQL + "cs_unity_tax nvarchar(15) NOT NULL, ";
+                strSQL = strSQL + "cs_unity_mobile nvarchar(15) NOT NULL, ";
+                strSQL = strSQL + "cs_unity_email nvarchar(128) NOT NULL, ";
+                strSQL = strSQL + "cs_unity_pic nvarchar(15) NOT NULL, ";
+                strSQL = strSQL + "cs_unity_abn nvarchar(15) NOT NULL, ";
+                strSQL = strSQL + "cs_unity_gst bit NOT NULL, ";
+                strSQL = strSQL + "cs_unity_mail1 nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "cs_unity_mail2 nvarchar(50) NOT NULL, ";
+                strSQL = strSQL + "cs_unity_mail3 nvarchar(3) NOT NULL, ";
+                strSQL = strSQL + "cs_unity_mail4 nvarchar(5) NOT NULL)";
+                SqlCommand cmdCreate = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                cmdCreate.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nCreate UNITY Client Table: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+
+        public Boolean Insert_UNITY_Client(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "INSERT INTO tblUNITYClients (";
+                strSQL = strSQL + "cs_unity_sname, ";
+                strSQL = strSQL + "cs_unity_name1, ";
+                strSQL = strSQL + "cs_unity_name2, ";
+                strSQL = strSQL + "cs_unity_property, ";
+                strSQL = strSQL + "cs_unity_street, ";
+                strSQL = strSQL + "cs_unity_city, ";
+                strSQL = strSQL + "cs_unity_state, ";
+                strSQL = strSQL + "cs_unity_postcode, ";
+                strSQL = strSQL + "cs_unity_phone, ";
+                strSQL = strSQL + "cs_unity_tax, ";
+                strSQL = strSQL + "cs_unity_mobile, ";
+                strSQL = strSQL + "cs_unity_email, ";
+                strSQL = strSQL + "cs_unity_pic, ";
+                strSQL = strSQL + "cs_unity_abn, ";
+                strSQL = strSQL + "cs_unity_gst, ";
+                strSQL = strSQL + "cs_unity_mail1, ";
+                strSQL = strSQL + "cs_unity_mail2, ";
+                strSQL = strSQL + "cs_unity_mail3, ";
+                strSQL = strSQL + "cs_unity_mail4) VALUES (";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(UNITYShortName) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(UNITYName1) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(UNITYName2) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(UNITYProperty) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(UNITYStreet) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(UNITYCity) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(UNITYState) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(UNITYPostCode) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(UNITYTelephone) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(UNITYFax) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(UNITYMobile) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(UNITYEmail) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(UNITYPIC) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(UNITYABN) + "', ";
+                strSQL = strSQL + "'" + UNITYGSTStatus.ToString() + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(UNITYMailingStreet) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(UNITYMailingCity) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(UNITYMailingState) + "', ";
+                strSQL = strSQL + "'" + MyFormatting.Hyphon(UNITYMailingPostCode) + "')";
+
+                SqlCommand cmdInsert = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                if (cmdInsert.ExecuteNonQuery() != 1)
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nInsert UNITY Client: More than one record would be inserted !";
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nInsert UNITY Client: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Get_UNITY_Client(String shortName)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+            ThisUNITYClient.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblUNITYClients WHERE cs_unity_sname = '" + MyFormatting.Hyphon(shortName) + "'";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    ThisUNITYClient.Load(rdrGet);
+                    isSuccessful = Gather_UNITY_Client();
+                }
+                else
+                {
+                    isSuccessful = false;
+                    ErrorMessage = "** Operator **\r\n\r\nGet UNITY Client: Client with Short Name " + shortName + " not found !";
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet UNITY Client: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Gather_UNITY_Client()
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                UNITYABN = ThisUNITYClient.Rows[0]["cs_unity_abn"].ToString();
+                UNITYCity = ThisUNITYClient.Rows[0]["cs_unity_city"].ToString();
+                UNITYEmail = ThisUNITYClient.Rows[0]["cs_unity_email"].ToString();
+                UNITYFax = ThisUNITYClient.Rows[0]["cs_unity_tax"].ToString();
+                UNITYGSTStatus = Convert.ToBoolean(ThisUNITYClient.Rows[0]["cs_unity_gst"]);
+                UNITYMailingCity = ThisUNITYClient.Rows[0]["cs_unity_mail2"].ToString();
+                UNITYMailingPostCode = ThisUNITYClient.Rows[0]["cs_unity_mail4"].ToString();
+                UNITYMailingState = ThisUNITYClient.Rows[0]["cs_unity_mail3"].ToString();
+                UNITYMailingStreet = ThisUNITYClient.Rows[0]["cs_unity_mail1"].ToString();
+                UNITYMobile = ThisUNITYClient.Rows[0]["cs_unity_mobile"].ToString();
+                UNITYName1 = ThisUNITYClient.Rows[0]["cs_unity_name1"].ToString();
+                UNITYName2 = ThisUNITYClient.Rows[0]["cs_unity_name2"].ToString();
+                UNITYPIC = ThisUNITYClient.Rows[0]["cs_unity_pic"].ToString();
+                UNITYPostCode = ThisUNITYClient.Rows[0]["cs_unity_postcode"].ToString();
+                UNITYProperty = ThisUNITYClient.Rows[0]["cs_unity_property"].ToString();
+                UNITYShortName = ThisUNITYClient.Rows[0]["cs_unity_sname"].ToString();
+                UNITYState = ThisUNITYClient.Rows[0]["cs_unity_state"].ToString();
+                UNITYStreet = ThisUNITYClient.Rows[0]["cs_unity_street"].ToString();
+                UNITYTelephone = ThisUNITYClient.Rows[0]["cs_unity_phone"].ToString();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGather UNITY Client: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Boolean Clear_UNITY_Client_Table(SqlTransaction trnEnvelope)
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+
+            try
+            {
+                String strSQL = "DELETE FROM tblUNITYClients";
+                SqlCommand cmdDelete = new SqlCommand(strSQL, MyConnection, trnEnvelope);
+                cmdDelete.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nClear UNITY Client Table: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public Int32 Get_UNITY_Client_Count()
+        {
+            Int32 clientCount = 0;
+
+            if (Get_UNITY_Clients() == true)
+                clientCount = UNITYClients.Rows.Count;
+
+            return clientCount;
+        }
+        public Boolean Get_UNITY_Clients()
+        {
+            Boolean isSuccessful = true;
+
+            ErrorMessage = string.Empty;
+            UNITYClients.Clear();
+
+            try
+            {
+                String strSQL = "SELECT * FROM tblUNITYClients ORDER BY cs_unity_sname";
+                SqlCommand cmdGet = new SqlCommand(strSQL, MyConnection);
+                SqlDataReader rdrGet = cmdGet.ExecuteReader();
+                if (rdrGet.HasRows == true)
+                {
+                    UNITYClients.Load(rdrGet);
+                }
+                rdrGet.Close();
+            }
+            catch (Exception ex)
+            {
+                isSuccessful = false;
+                ErrorMessage = "** Operator **\r\n\r\nGet UNITY Clients: " + ex.Message + " !";
+            }
+
+            return isSuccessful;
+        }
+        public String Browse_UNITY_clients(String shortName)
+        {
+            String thisClient = string.Empty;
+
+            ErrorMessage = string.Empty;
+
+            if (Get_UNITY_Clients() == true)
+            {
+                FrmUNITYBrowse clientBrowse = new FrmUNITYBrowse();
+                clientBrowse.myClients = UNITYClients;
+                clientBrowse.searchName = shortName;
+                
+                if (clientBrowse.ShowDialog() == System.Windows.Forms.DialogResult.Yes)
+                {
+                    thisClient = clientBrowse.searchName;
+                }
+                clientBrowse.Close();
+            }
+
+            return thisClient;
         }
         #endregion
     }
